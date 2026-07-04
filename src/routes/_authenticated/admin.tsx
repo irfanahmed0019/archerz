@@ -250,7 +250,14 @@ function AdminPage() {
                 >
                   <div className="font-mono text-xs text-signal">{w.code}</div>
                   <div>
-                    <div className="font-display text-xl">{w.title}</div>
+                    <div className="font-display text-xl">
+                      {w.title}
+                      {w.is_featured && (
+                        <span className="ml-2 border border-signal px-2 py-0.5 align-middle font-mono text-[9px] uppercase tracking-[0.24em] text-signal">
+                          ★ MAIN POSTER
+                        </span>
+                      )}
+                    </div>
                     <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                       {w.event_date ?? "—"} · {w.status} ·{" "}
                       <span className={w.is_published ? "text-signal" : "text-foreground"}>
@@ -259,6 +266,17 @@ function AdminPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+                    {isAdmin && (
+                      <button
+                        onClick={() => setFeatured(w.id, !w.is_featured)}
+                        className={`border px-3 py-1 hover:border-signal ${
+                          w.is_featured ? "border-signal text-signal" : "border-hairline"
+                        }`}
+                        title={w.is_featured ? "Remove from main poster" : "Promote to main poster"}
+                      >
+                        {w.is_featured ? "DEMOTE" : "PROMOTE"}
+                      </button>
+                    )}
                     <button
                       onClick={() => setEditing(w)}
                       className="border border-hairline px-3 py-1 hover:border-signal"
@@ -274,6 +292,7 @@ function AdminPage() {
                       </button>
                     )}
                   </div>
+
                 </div>
               ))}
             </div>
