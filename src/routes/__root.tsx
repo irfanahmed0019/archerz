@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "ARCHERZ" },
       { name: "theme-color", content: "#f4f1ea" },
-      { property: "og:title", content: "ARCHERZ — Engineer the Future" },
+      { property: "og:title", content: "ARCHERZ — Engineer the Future | CS & Tech Students, GPTC Attingal" },
       {
         property: "og:description",
         content:
@@ -90,12 +90,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "ARCHERZ" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ARCHERZ — Engineer the Future" },
+      { name: "twitter:title", content: "ARCHERZ — Engineer the Future | CS & Tech Students, GPTC Attingal" },
       {
         name: "twitter:description",
         content:
           "Association of Computer Science & Technology Students, GPTC Attingal.",
       },
+      { name: "description", content: "ARCHERZ is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate." },
+      { property: "og:description", content: "ARCHERZ is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate." },
+      { name: "twitter:description", content: "ARCHERZ is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/254c9f37-8b8e-44f7-808a-a6064dfb0630/id-preview-9a632a29--f121f496-ded9-4590-a2e5-02383200aff0.lovable.app-1783186168226.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/254c9f37-8b8e-44f7-808a-a6064dfb0630/id-preview-9a632a29--f121f496-ded9-4590-a2e5-02383200aff0.lovable.app-1783186168226.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
