@@ -12,7 +12,13 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [{ property: "og:url", content: "/" }],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [
+      { rel: "canonical", href: "/" },
+      // Preload nav emblem + hero art so the header never flickers on slow connections
+      { rel: "preload", as: "image", href: archLogo.url, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: heroBackdrop, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: miniMilitia.url },
+    ],
   }),
 });
 
