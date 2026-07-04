@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +19,9 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) window.location.href = "/admin";
+      if (data.user) navigate({ to: "/admin", replace: true });
     });
-  }, []);
+  }, [navigate]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -36,12 +37,12 @@ function AuthPage() {
           password,
           options: {
             data: { full_name: name },
-            emailRedirectTo: window.location.origin + "/auth",
+            emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
       }
-      window.location.href = "/admin";
+      navigate({ to: "/admin", replace: true });
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -52,10 +53,10 @@ function AuthPage() {
   async function google() {
     setErr(null);
     const r = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/auth",
+      redirect_uri: window.location.origin,
     });
     if (r.error) setErr(r.error instanceof Error ? r.error.message : String(r.error));
-    else if (!r.redirected) window.location.href = "/admin";
+    else if (!r.redirected) navigate({ to: "/admin", replace: true });
   }
 
   return (
