@@ -213,7 +213,7 @@ function initials(name: string) {
     .slice(0, 2);
 }
 
-function LogoMark({ size = 28, invert = true }: { size?: number; invert?: boolean }) {
+function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boolean }) {
   return (
     <img
       src={archLogo.url}
@@ -283,7 +283,7 @@ function Nav() {
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
         <a href="#top" className="group flex items-baseline gap-1">
-          <LogoMark size={26} invert={true} />
+          <LogoMark size={26} invert={false} />
           <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
             rchers
           </span>
@@ -395,7 +395,7 @@ function Hero() {
                 aria-hidden
               />
               <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
-                <LogoMark size={110} invert={true} />
+                <LogoMark size={110} invert={false} />
                 <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
               </div>
             </div>
