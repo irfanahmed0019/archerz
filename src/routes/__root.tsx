@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "ARCHERS is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate.",
       },
       { name: "author", content: "ARCHERS" },
-      { name: "theme-color", content: "#000000" },
+      { name: "theme-color", content: "#f4f1ea" },
       { property: "og:title", content: "ARCHERS — Engineer the Future" },
       {
         property: "og:description",
