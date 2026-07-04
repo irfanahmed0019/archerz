@@ -983,7 +983,7 @@ function Team() {
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-0 border border-hairline sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-2 gap-0 border border-hairline lg:grid-cols-4">
           {TEAM.map((m, i) => (
             <div
               key={m.name}
