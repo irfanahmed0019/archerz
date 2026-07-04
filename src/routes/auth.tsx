@@ -19,7 +19,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/_authenticated/admin" as unknown as "/" });
+      if (data.user) navigate({ to: "/admin" as unknown as "/" });
     });
   }, [navigate]);
 
@@ -42,7 +42,7 @@ function AuthPage() {
         });
         if (error) throw error;
       }
-      window.location.href = "/_authenticated/admin";
+      window.location.href = "/admin";
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -56,7 +56,7 @@ function AuthPage() {
       redirect_uri: window.location.origin + "/auth",
     });
     if (r.error) setErr(r.error instanceof Error ? r.error.message : String(r.error));
-    else if (!r.redirected) window.location.href = "/_authenticated/admin";
+    else if (!r.redirected) window.location.href = "/admin";
   }
 
   return (
