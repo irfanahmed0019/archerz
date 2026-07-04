@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { adminCreateUser } from "@/lib/admin-users.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — ARCHERZ" }] }),
@@ -666,16 +668,42 @@ function MembersPanel() {
     Array<{ id: string; email: string | null; display_name: string | null; created_at?: string | null }>
   >([]);
   const [q, setQ] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
+  const [nEmail, setNEmail] = useState("");
+  const [nPass, setNPass] = useState("");
+  const [nName, setNName] = useState("");
+  const [nRole, setNRole] = useState<Role>("normal");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const createUser = useServerFn(adminCreateUser);
+
+  async function loadMembers() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("id, email, display_name, created_at")
+      .order("created_at", { ascending: false });
+    setMembers((data ?? []) as typeof members);
+  }
 
   useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, email, display_name, created_at")
-        .order("created_at", { ascending: false });
-      setMembers((data ?? []) as typeof members);
-    })();
+    loadMembers();
   }, []);
+
+  async function handleCreate(e: FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMsg(null);
+    try {
+      await createUser({ data: { email: nEmail, password: nPass, displayName: nName, role: nRole } });
+      setMsg(`Created ${nEmail}`);
+      setNEmail(""); setNPass(""); setNName(""); setNRole("normal");
+      await loadMembers();
+    } catch (err) {
+      setMsg(err instanceof Error ? err.message : "Failed to create user");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const filtered = members.filter(
     (m) =>
@@ -690,13 +718,61 @@ function MembersPanel() {
         <h1 className="font-display text-3xl tracking-tight md:text-5xl">
           Members <span className="text-signal">/ {members.length}</span>
         </h1>
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="search email or name"
-          className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="search email or name"
+            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+          />
+          <button
+            onClick={() => setShowCreate((v) => !v)}
+            className="border border-signal px-3 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-signal"
+          >
+            {showCreate ? "Close" : "+ New user"}
+          </button>
+        </div>
       </div>
+
+      {showCreate && (
+        <form onSubmit={handleCreate} className="mb-8 grid gap-3 border border-hairline bg-surface p-5 md:grid-cols-5">
+          <input
+            required type="email" placeholder="email"
+            value={nEmail} onChange={(e) => setNEmail(e.target.value)}
+            className="border border-hairline bg-background px-3 py-2 font-mono text-xs md:col-span-2"
+          />
+          <input
+            required type="text" placeholder="display name"
+            value={nName} onChange={(e) => setNName(e.target.value)}
+            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+          />
+          <input
+            required type="password" placeholder="password (min 8)"
+            value={nPass} onChange={(e) => setNPass(e.target.value)}
+            minLength={8}
+            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+          />
+          <select
+            value={nRole} onChange={(e) => setNRole(e.target.value as Role)}
+            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+          >
+            <option value="normal">normal</option>
+            <option value="coordinator">coordinator</option>
+            <option value="it_admin">it_admin</option>
+            <option value="admin">admin</option>
+          </select>
+          <div className="md:col-span-5 flex items-center justify-between gap-4">
+            {msg && <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">{msg}</span>}
+            <button
+              type="submit" disabled={busy}
+              className="ml-auto border border-signal bg-signal px-4 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-background disabled:opacity-50"
+            >
+              {busy ? "Creating…" : "Create user"}
+            </button>
+          </div>
+        </form>
+      )}
+
       <div className="border-t border-hairline">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <div>NAME</div>
