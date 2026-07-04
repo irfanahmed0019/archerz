@@ -308,7 +308,9 @@ function AdminPage() {
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
 
-        {tab === "members" && isAdmin && <MembersPanel />}
+        {tab === "members" && isAdmin && <TeamMembersPanel />}
+
+        {tab === "users" && isAdmin && <MembersPanel />}
       </div>
 
       {(editing || creating) && (
