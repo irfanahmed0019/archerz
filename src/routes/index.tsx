@@ -187,7 +187,7 @@ const TEAM = [
 const ROADMAP = [
   {
     tag: "PHASE_01",
-    title: "ARCHERS LAUNCH",
+    title: "ARCHERZ LAUNCH",
     body: "Official launch of the Association of Computer Science & Technology Students.",
     status: "ACTIVE",
   },
@@ -219,7 +219,7 @@ function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boole
   return (
     <img
       src={archLogo.url}
-      alt="ARCHERS emblem"
+      alt="ARCHERZ emblem"
       width={size}
       height={size}
       className="block"
@@ -422,7 +422,7 @@ function Hero() {
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <a href="#community" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
-            → JOIN ARCHERS
+            → JOIN ARCHERZ
           </a>
           <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
             SEE EVENTS
@@ -461,7 +461,7 @@ function TickerBand() {
           ">> SYSTEM ONLINE",
           "MULTI-DISCIPLINE MODULES ACTIVE",
           "ACCESS GRANTED",
-          "ARCHERS '26",
+          "ARCHERZ '26",
           "GPTC ATTINGAL",
           "CS · TECHNOLOGY DIVISION",
           "LEARN / BUILD / INNOVATE",
@@ -500,7 +500,7 @@ function Manifesto() {
           </div>
           <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             Move beyond textbooks and start creating. From workshops to real-world projects,
-            ARCHERS is where students learn, build, and grow together.
+            ARCHERZ is where students learn, build, and grow together.
           </div>
         </div>
 
@@ -698,7 +698,7 @@ function PriorityEvent() {
               loading="lazy"
             />
             <div className="absolute left-0 top-0 sticker m-3" style={{ transform: "rotate(-4deg)" }}>
-              ARCHERS · PRESENTS
+              ARCHERZ · PRESENTS
             </div>
             <div className="absolute right-0 bottom-0 sticker m-3" style={{ transform: "rotate(3deg)" }}>
               32 SEATS
@@ -868,7 +868,7 @@ function ClosingCTA() {
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
           <a href="#contact" className="btn-brutal btn-brutal-hover" data-cursor-hover>
-            → JOIN ARCHERS
+            → JOIN ARCHERZ
           </a>
           <a href="#about" className="btn-ghost" data-cursor-hover>
             LEARN MORE
@@ -971,7 +971,7 @@ function Footer() {
       {/* Huge wordmark */}
       <div className="mx-auto max-w-[1400px] px-5 pt-16 md:px-10 md:pt-24">
         <div className="font-display text-[22vw] leading-[0.8] tracking-tighter text-foreground md:text-[16rem]">
-          ARCHERS<span className="text-signal">.</span>
+          ARCHERZ<span className="text-signal">.</span>
         </div>
       </div>
 
@@ -981,7 +981,7 @@ function Footer() {
             <div className="flex items-center gap-3">
               <LogoMark size={30} />
               <div className="font-display text-lg tracking-[0.18em] text-foreground">
-                ARCHERS
+                ARCHERZ
               </div>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
@@ -1037,7 +1037,7 @@ function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <div>© 2026 ARCHERS TECHNICAL COMMAND · ALL RIGHTS RESERVED</div>
+          <div>© 2026 ARCHERZ TECHNICAL COMMAND · ALL RIGHTS RESERVED</div>
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
             SYS.STATUS · NOMINAL
