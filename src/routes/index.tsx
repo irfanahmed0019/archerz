@@ -350,15 +350,13 @@ function Nav() {
                 {l.label}
               </a>
             ))}
-            <a
-              href={REGISTER_URL}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to="/auth"
               onClick={() => setOpen(false)}
               className="btn-brutal btn-brutal-hover mt-3 justify-center"
             >
-              → REGISTER
-            </a>
+              → LOGIN
+            </Link>
           </div>
         </div>
       )}
