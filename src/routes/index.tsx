@@ -213,7 +213,7 @@ function initials(name: string) {
     .slice(0, 2);
 }
 
-function LogoMark({ size = 28, invert = true }: { size?: number; invert?: boolean }) {
+function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boolean }) {
   return (
     <img
       src={archLogo.url}
@@ -283,7 +283,7 @@ function Nav() {
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
         <a href="#top" className="group flex items-baseline gap-1">
-          <LogoMark size={26} invert={true} />
+          <LogoMark size={26} invert={false} />
           <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
             rchers
           </span>
@@ -357,18 +357,18 @@ function Hero() {
         src={heroBackdrop}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 will-change-transform"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-multiply grayscale will-change-transform"
       />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.5]" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 90%)",
+            "radial-gradient(ellipse at 50% 70%, transparent 0%, color-mix(in oklab, var(--color-background) 70%, transparent) 55%, var(--color-background) 92%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-25" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-15" aria-hidden />
 
       {/* Top strip */}
       <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
@@ -395,7 +395,7 @@ function Hero() {
                 aria-hidden
               />
               <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
-                <LogoMark size={110} invert={true} />
+                <LogoMark size={110} invert={false} />
                 <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
               </div>
             </div>
