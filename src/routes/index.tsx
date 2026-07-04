@@ -357,18 +357,18 @@ function Hero() {
         src={heroBackdrop}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 will-change-transform"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-multiply grayscale will-change-transform"
       />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.5]" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 90%)",
+            "radial-gradient(ellipse at 50% 70%, transparent 0%, color-mix(in oklab, var(--color-background) 70%, transparent) 55%, var(--color-background) 92%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-25" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-15" aria-hidden />
 
       {/* Top strip */}
       <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
