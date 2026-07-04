@@ -15,6 +15,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -26,21 +27,28 @@ function AuthPage() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setErr(null);
+    setStatus(null);
     setBusy(true);
     try {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({
+        if (!name.trim()) throw new Error("Please enter your name.");
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: name },
+            data: { full_name: name.trim() },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
+        if (!data.session) {
+          setStatus("Thanks for being part of ARCHERZ. Check your email, then sign in to open your dashboard.");
+          setMode("signin");
+          return;
+        }
       }
       navigate({ to: "/admin", replace: true });
     } catch (e) {
@@ -52,6 +60,7 @@ function AuthPage() {
 
   async function google() {
     setErr(null);
+    setStatus(null);
     const r = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
@@ -69,7 +78,7 @@ function AuthPage() {
           {mode === "signin" ? "Sign in." : "Create account."}
         </h1>
         <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          [ COORDINATOR / ADMIN ACCESS ]
+          [ MEMBER / COORDINATOR / ADMIN ACCESS ]
         </p>
 
         <button
@@ -89,6 +98,7 @@ function AuthPage() {
           )}
           <Field label="EMAIL" type="email" value={email} onChange={setEmail} required />
           <Field label="PASSWORD" type="password" value={password} onChange={setPassword} required />
+          {status && <div className="border border-hairline bg-background p-3 font-mono text-xs text-foreground">{status}</div>}
           {err && <div className="font-mono text-xs text-signal">{err}</div>}
           <button
             type="submit"
