@@ -25,15 +25,14 @@ export const adminCreateUser = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     // Verify caller is admin or it_admin
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    const { data: isItAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "it_admin",
-    });
-    if (!isAdmin && !isItAdmin) throw new Error("Forbidden");
+    const { data: myRoles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const roles = (myRoles ?? []).map((r) => r.role as string);
+    if (!roles.includes("admin") && !roles.includes("it_admin")) {
+      throw new Error("Forbidden");
+    }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
