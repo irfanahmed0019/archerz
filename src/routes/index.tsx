@@ -343,6 +343,10 @@ function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boole
       alt="ARCHERZ emblem"
       width={size}
       height={size}
+      loading="eager"
+      decoding="async"
+      // @ts-expect-error fetchpriority is a valid HTML attribute
+      fetchpriority="high"
       className="block"
       style={invert ? { filter: "invert(1)" } : undefined}
     />
