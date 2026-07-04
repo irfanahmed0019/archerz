@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png.asset.json";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
-import bannerEvent from "@/assets/banner-event.jpg";
+import miniMilitia from "@/assets/mini-militia.avif.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -12,6 +12,109 @@ export const Route = createFileRoute("/")({
     links: [{ rel: "canonical", href: "/" }],
   }),
 });
+
+function Index() {
+  // Always land on the top of the page. If a stray hash brought us here,
+  // strip it so refreshes don't punt users to the footer.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="relative bg-background text-foreground">
+      <Nav />
+      <main>
+        <Hero />
+        <TickerBand />
+        <Manifesto />
+        <Workshops />
+        <PriorityEvent />
+        <Team />
+        <Roadmap />
+        <ClosingCTA />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+// --- 3D tilt: mouse-driven perspective for cards/banners ---
+function useTilt<T extends HTMLElement>(max = 8) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(1200px) rotateX(${(-y * max).toFixed(2)}deg) rotateY(${(x * max).toFixed(2)}deg)`;
+    };
+    const onLeave = () => {
+      el.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+    };
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    return () => {
+      el.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mouseleave", onLeave);
+    };
+  }, [max]);
+  return ref;
+}
+
+// --- scroll parallax: translate an element as it enters/leaves viewport ---
+function useParallax<T extends HTMLElement>(strength = 0.2) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const center = r.top + r.height / 2 - window.innerHeight / 2;
+        el.style.transform = `translate3d(0, ${(-center * strength).toFixed(1)}px, 0) scale(1.08)`;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [strength]);
+  return ref;
+}
+
+// --- reveal on scroll ---
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).dataset.revealed = "true";
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
 
 const NAV_LINKS = [
   { href: "#workshops", label: "Workshops" },
