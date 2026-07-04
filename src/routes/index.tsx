@@ -22,6 +22,8 @@ function Index() {
       history.replaceState(null, "", window.location.pathname + window.location.search);
     }
     window.scrollTo(0, 0);
+    // Boot the noart-style motion stack (Lenis + cursor + scramble + mask reveal)
+    import("@/lib/motion").then((m) => m.startMotion());
   }, []);
 
   return (
@@ -306,13 +308,13 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex">
+          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
             → ENLIST
           </a>
           <button
             aria-label="Toggle menu"
             className="btn-ghost md:hidden !px-3 !py-2"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() = data-cursor-hover> setOpen((v) => !v)}
           >
             <span className="block h-0.5 w-5 bg-current" />
           </button>
@@ -399,16 +401,16 @@ function Hero() {
                 <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
               </div>
             </div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
+            <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground" data-scramble>
               [ ASSN. OF CS &amp; TECH · GPTC · EST. 2026 ]
             </div>
           </div>
         </div>
 
         <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
-          ENGINEER
+          <span data-reveal="mask"><span>ENGINEER</span></span>
           <br />
-          <span className="italic font-serif text-signal font-normal">the future</span>
+          <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future</span></span>
         </h1>
 
         <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -418,10 +420,10 @@ function Hero() {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <a href="#community" className="btn-brutal btn-brutal-hover">
+          <a href="#community" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
             → JOIN ARCHERS
           </a>
-          <a href="#events" className="btn-ghost">
+          <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
             SEE EVENTS
           </a>
         </div>
@@ -560,7 +562,7 @@ function Workshops() {
             <br />
             <span className="italic font-serif font-normal">your skills.</span>
           </h2>
-          <a href="#workshops-list" className="btn-brutal btn-brutal-hover mt-10">
+          <a href="#workshops-list" className="btn-brutal btn-brutal-hover mt-10" data-cursor-hover>
             ↗ ENTER THE ARENA
           </a>
         </div>
@@ -726,7 +728,7 @@ function PriorityEvent() {
                   </div>
                 ))}
               </div>
-              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center">
+              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center" data-cursor-hover>
                 → REGISTER
               </a>
             </div>
@@ -864,10 +866,10 @@ function ClosingCTA() {
           together. Bring the curiosity — we'll bring the tooling.
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="btn-brutal btn-brutal-hover">
+          <a href="#contact" className="btn-brutal btn-brutal-hover" data-cursor-hover>
             → JOIN ARCHERS
           </a>
-          <a href="#about" className="btn-ghost">
+          <a href="#about" className="btn-ghost" data-cursor-hover>
             LEARN MORE
           </a>
         </div>
@@ -951,7 +953,7 @@ function Contact() {
                   "ENCRYPTED_ON_TRANSPORT"
                 )}
               </div>
-              <button type="submit" className="btn-brutal btn-brutal-hover">
+              <button type="submit" className="btn-brutal btn-brutal-hover" data-cursor-hover>
                 → CONTACT US
               </button>
             </div>
