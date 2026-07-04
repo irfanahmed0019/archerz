@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png.asset.json";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
-import bannerEvent from "@/assets/banner-event.jpg";
+import miniMilitia from "@/assets/mini-militia.avif.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -12,6 +12,109 @@ export const Route = createFileRoute("/")({
     links: [{ rel: "canonical", href: "/" }],
   }),
 });
+
+function Index() {
+  // Always land on the top of the page. If a stray hash brought us here,
+  // strip it so refreshes don't punt users to the footer.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="relative bg-background text-foreground">
+      <Nav />
+      <main>
+        <Hero />
+        <TickerBand />
+        <Manifesto />
+        <Workshops />
+        <PriorityEvent />
+        <Team />
+        <Roadmap />
+        <ClosingCTA />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+// --- 3D tilt: mouse-driven perspective for cards/banners ---
+function useTilt<T extends HTMLElement>(max = 8) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(1200px) rotateX(${(-y * max).toFixed(2)}deg) rotateY(${(x * max).toFixed(2)}deg)`;
+    };
+    const onLeave = () => {
+      el.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+    };
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    return () => {
+      el.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mouseleave", onLeave);
+    };
+  }, [max]);
+  return ref;
+}
+
+// --- scroll parallax: translate an element as it enters/leaves viewport ---
+function useParallax<T extends HTMLElement>(strength = 0.2) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const center = r.top + r.height / 2 - window.innerHeight / 2;
+        el.style.transform = `translate3d(0, ${(-center * strength).toFixed(1)}px, 0) scale(1.08)`;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [strength]);
+  return ref;
+}
+
+// --- reveal on scroll ---
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).dataset.revealed = "true";
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
 
 const NAV_LINKS = [
   { href: "#workshops", label: "Workshops" },
@@ -179,16 +282,14 @@ function Nav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
-        <a href="#top" className="flex items-center gap-3">
-          <LogoMark size={26} />
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-base tracking-[0.24em] text-foreground">
-              ARCHERS
-            </span>
-            <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline">
-              /GPTC · '26
-            </span>
-          </div>
+        <a href="#top" className="group flex items-baseline gap-1">
+          <LogoMark size={26} invert={true} />
+          <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
+            rchers
+          </span>
+          <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline pl-2">
+            /GPTC · '26
+          </span>
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -246,41 +347,43 @@ function Nav() {
 }
 
 function Hero() {
+  const parallax = useParallax<HTMLImageElement>(0.15);
+  const tilt = useTilt<HTMLDivElement>(6);
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden">
-      {/* Backdrop image */}
+    <section id="top" className="relative min-h-screen overflow-hidden [perspective:1400px]">
+      {/* Backdrop image with scroll parallax */}
       <img
+        ref={parallax}
         src={heroBackdrop}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 will-change-transform"
       />
-      {/* Overlays */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 85%)",
+            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 90%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-30" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-25" aria-hidden />
 
       {/* Top strip */}
       <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
         <div className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
-          LOCATION · GPTC ATTINGAL
+          GPTC ATTINGAL · KERALA
         </div>
-        <div className="hidden md:block">LAT 8.6982°N · LON 76.8156°E</div>
+        <div className="hidden md:block">CS &amp; TECHNOLOGY · CYCLE '26</div>
         <div className="text-foreground">'26</div>
       </div>
 
       {/* Hero centerpiece */}
       <div className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 pb-16 pt-16 text-center md:px-10 md:pt-24 md:pb-24">
-        {/* Bracket-framed logo + wordmark */}
-        <div className="hero-frame p-6 md:p-10">
+        {/* Bracket-framed logo — tilt on hover */}
+        <div ref={tilt} className="hero-frame p-6 md:p-10 transition-transform duration-200 will-change-transform [transform-style:preserve-3d]">
           <div className="flex flex-col items-center gap-5">
             <div className="relative">
               <div
@@ -291,15 +394,17 @@ function Hero() {
                 }}
                 aria-hidden
               />
-              <LogoMark size={110} />
+              <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
+                <LogoMark size={110} invert={true} />
+                <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
+              </div>
             </div>
             <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
-              [ ASSN. OF CS &amp; TECH · EST. 2026 ]
+              [ ASSN. OF CS &amp; TECH · GPTC · EST. 2026 ]
             </div>
           </div>
         </div>
 
-        {/* Massive display headline */}
         <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
           ENGINEER
           <br />
@@ -307,9 +412,9 @@ function Hero() {
         </h1>
 
         <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-          Association of Computer Science &amp; Technology Students at Government Polytechnic
-          College, Attingal. Building the next generation of developers, innovators, and
-          technology leaders.
+          The student association for Computer Science and Technology at Government
+          Polytechnic College, Attingal. Workshops, competitions, and side projects
+          run by students, for students.
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -317,30 +422,28 @@ function Hero() {
             → JOIN ARCHERS
           </a>
           <a href="#events" className="btn-ghost">
-            EXPLORE EVENTS
+            SEE EVENTS
           </a>
         </div>
 
-        {/* Trail metadata */}
         <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-6 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           <div className="text-left">
-            <div className="text-signal">SYS.STATUS</div>
-            <div className="mt-1 text-foreground">ONLINE</div>
+            <div className="text-signal">CHAPTER</div>
+            <div className="mt-1 text-foreground">GPTC ATTINGAL</div>
           </div>
           <div className="text-center">
-            <div className="text-signal">DIVISION</div>
+            <div className="text-signal">BRANCH</div>
             <div className="mt-1 text-foreground">CS &amp; TECH</div>
           </div>
           <div className="text-right">
-            <div className="text-signal">MODE</div>
+            <div className="text-signal">STATUS</div>
             <div className="mt-1 text-foreground">RECRUITING</div>
           </div>
         </div>
       </div>
 
-      {/* Scroll cue */}
       <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-        ↓ SCROLL_TO_INITIATE
+        ↓ SCROLL
       </div>
     </section>
   );
@@ -533,71 +636,89 @@ function Workshops() {
 }
 
 function PriorityEvent() {
+  const tilt = useTilt<HTMLDivElement>(10);
   return (
-    <section id="events" className="relative">
-      <div className="relative overflow-hidden border-y border-hairline">
-        <img
-          src={bannerEvent}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover opacity-80"
-          loading="lazy"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 25%, transparent) 0%, transparent 40%, color-mix(in oklab, var(--color-background) 80%, transparent) 100%)",
-          }}
-          aria-hidden
-        />
+    <section id="events" className="relative border-y border-hairline bg-background">
+      {/* Blurred poster ambience */}
+      <img
+        src={miniMilitia.url}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 blur-2xl"
+        loading="lazy"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 55%, transparent) 0%, color-mix(in oklab, var(--color-background) 65%, transparent) 40%, var(--color-background) 100%)",
+        }}
+        aria-hidden
+      />
 
-        <div className="relative mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36">
-          {/* Top row */}
-          <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
-            <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
-            <div className="text-muted-foreground">
-              EVENT_TYPE: <span className="text-foreground">ESPORTS</span>
+      <div className="relative mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36 [perspective:1400px]">
+        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
+          <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
+          <div className="text-muted-foreground">
+            TYPE: <span className="text-foreground">ESPORTS</span>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <span className="sticker" style={{ transform: "rotate(-3deg)" }}>
+            ● LIVE '26
+          </span>
+          <span className="sticker" style={{ transform: "rotate(2deg)" }}>
+            OCT · 25
+          </span>
+          <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
+            10:00 → 16:00
+          </span>
+        </div>
+
+        <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
+          MINI
+          <br />
+          <span className="italic font-serif font-normal text-signal">militia.</span>
+        </h2>
+
+        <div className="mt-14 grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-start">
+          {/* Poster with 3D tilt */}
+          <div
+            ref={tilt}
+            className="relative border border-hairline bg-surface transition-transform duration-200 will-change-transform [transform-style:preserve-3d]"
+          >
+            <img
+              src={miniMilitia.url}
+              alt="Mini Militia tournament poster"
+              className="block h-auto w-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute left-0 top-0 sticker m-3" style={{ transform: "rotate(-4deg)" }}>
+              ARCHERS · PRESENTS
+            </div>
+            <div className="absolute right-0 bottom-0 sticker m-3" style={{ transform: "rotate(3deg)" }}>
+              32 SEATS
             </div>
           </div>
 
-          {/* Sticker date */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span className="sticker" style={{ transform: "rotate(-3deg)" }}>
-              ● LIVE '26
-            </span>
-            <span className="sticker" style={{ transform: "rotate(2deg)" }}>
-              OCT · 25
-            </span>
-            <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
-              10:00 → 16:00
-            </span>
-          </div>
-
-          {/* Massive event type */}
-          <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
-            MINI
-            <br />
-            <span className="italic font-serif font-normal text-signal">militia.</span>
-          </h2>
-
-          <div className="mt-10 grid gap-10 md:grid-cols-[1.3fr_1fr]">
+          <div className="flex flex-col gap-6">
             <p className="max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
-              Join the ultimate battle. Show off your skills in our multiplayer combat tournament —
-              solo grit, squad tactics, and a live scoreboard until one team stands. Only 32 seats.
+              Squad up. 4v4 mobile combat, live scoreboard, one lab, one afternoon.
+              Bring your own device. Winner takes the pot. Losers get pizza.
             </p>
 
             <div className="panel p-6">
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-signal">
-                EVENT_SPECIFICATIONS
+                EVENT SPECS
               </div>
               <div className="mt-4 divide-y divide-hairline">
                 {[
                   ["DATE", "OCT 25, 2026"],
                   ["TIME", "10:00 — 16:00"],
                   ["LOCATION", "COMPUTER LAB 01"],
-                  ["FORMAT", "SQUAD // 4v4"],
-                  ["SEATS", "32 OPERATORS"],
+                  ["FORMAT", "SQUAD · 4v4"],
+                  ["SEATS", "32 PLAYERS"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between py-2.5 font-mono text-[11px] uppercase tracking-[0.18em]">
                     <span className="text-muted-foreground">{k}</span>
@@ -606,7 +727,7 @@ function PriorityEvent() {
                 ))}
               </div>
               <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center">
-                → REGISTER NOW
+                → REGISTER
               </a>
             </div>
           </div>
@@ -924,21 +1045,3 @@ function Footer() {
   );
 }
 
-function Index() {
-  return (
-    <main className="min-h-screen">
-      <Nav />
-      <Hero />
-      <TickerBand />
-      <Manifesto />
-      <DisplayMarquee text="LEARN · BUILD · INNOVATE ·" />
-      <Workshops />
-      <PriorityEvent />
-      <Team />
-      <Roadmap />
-      <ClosingCTA />
-      <Contact />
-      <Footer />
-    </main>
-  );
-}
