@@ -571,25 +571,27 @@ function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => 
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("coordinator");
 
+  async function loadRoles() {
+    const { data: rs } = await supabase.from("user_roles").select("user_id, role");
+    const ids = Array.from(new Set((rs ?? []).map((r) => r.user_id)));
+    const { data: ps } = await supabase
+      .from("profiles")
+      .select("id, email, display_name")
+      .in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+    const map = new Map((ps ?? []).map((p) => [p.id, p]));
+    setList(
+      (rs ?? []).map((r) => ({
+        user_id: r.user_id,
+        role: r.role as Role,
+        email: map.get(r.user_id)?.email ?? null,
+        display_name: map.get(r.user_id)?.display_name ?? null,
+      })),
+    );
+  }
+
   useEffect(() => {
-    (async () => {
-      const { data: rs } = await supabase.from("user_roles").select("user_id, role");
-      const ids = Array.from(new Set((rs ?? []).map((r) => r.user_id)));
-      const { data: ps } = await supabase
-        .from("profiles")
-        .select("id, email, display_name")
-        .in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
-      const map = new Map((ps ?? []).map((p) => [p.id, p]));
-      setList(
-        (rs ?? []).map((r) => ({
-          user_id: r.user_id,
-          role: r.role as Role,
-          email: map.get(r.user_id)?.email ?? null,
-          display_name: map.get(r.user_id)?.display_name ?? null,
-        })),
-      );
-    })();
-  }, [onChanged]);
+    loadRoles();
+  }, []);
 
   async function grant(e: FormEvent) {
     e.preventDefault();
@@ -599,10 +601,12 @@ function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => 
     if (error) return alert(error.message);
     setEmail("");
     onChanged();
+    await loadRoles();
   }
   async function revoke(user_id: string, role: Role) {
     await supabase.from("user_roles").delete().eq("user_id", user_id).eq("role", role);
     onChanged();
+    await loadRoles();
   }
 
   return (
