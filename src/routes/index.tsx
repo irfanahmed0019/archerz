@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png.asset.json";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
 import miniMilitia from "@/assets/mini-militia.avif.asset.json";
+import { supabase } from "@/integrations/supabase/client";
+
+const REGISTER_URL = "https://forms.gle/KMNC6zrhtcqRcShaA";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -922,7 +925,6 @@ function Contact() {
           </p>
           <div className="mt-10 space-y-5 font-mono text-xs uppercase tracking-[0.2em]">
             {[
-              ["CHANNEL", "archerz@gptcattingal.in"],
               ["BASE", "GPTC ATTINGAL · KERALA · IN"],
               ["DIVISION", "COMPUTER SCIENCE & TECHNOLOGY"],
             ].map(([k, v]) => (
