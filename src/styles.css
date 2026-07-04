@@ -225,6 +225,77 @@
 @utility animate-marquee {
   animation: marquee 40s linear infinite;
 }
+@utility animate-marquee-slow {
+  animation: marquee 80s linear infinite;
+}
+@utility animate-marquee-fast {
+  animation: marquee 22s linear infinite;
+}
+
+/* Big frame with corner brackets — Sathwa-style hero mark frame */
+@utility hero-frame {
+  position: relative;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--color-foreground);
+    border-style: solid;
+    border-width: 0;
+  }
+  &::before {
+    top: 0;
+    left: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+  }
+  &::after {
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+  }
+}
+@utility hero-frame-signal {
+  &::before, &::after { border-color: var(--color-signal); }
+}
+
+/* Rotated sticker tag */
+@utility sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Text stroke — outline display type */
+@utility text-stroke {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-foreground);
+  text-stroke: 1.5px var(--color-foreground);
+}
+@utility text-stroke-signal {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-signal);
+  text-stroke: 1.5px var(--color-signal);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-8px) rotate(var(--rot, 0deg)); }
+}
+@utility animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
 
 @keyframes blink {
   0%, 49% { opacity: 1; }
