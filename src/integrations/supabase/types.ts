@@ -105,6 +105,7 @@ export type Database = {
           event_date: string | null
           id: string
           image_url: string | null
+          is_featured: boolean
           is_published: boolean
           long_description: string | null
           ordering: number
@@ -123,6 +124,7 @@ export type Database = {
           event_date?: string | null
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           is_published?: boolean
           long_description?: string | null
           ordering?: number
@@ -141,6 +143,7 @@ export type Database = {
           event_date?: string | null
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           is_published?: boolean
           long_description?: string | null
           ordering?: number

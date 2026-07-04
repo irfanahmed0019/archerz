@@ -30,8 +30,10 @@ type Workshop = {
   register_url: string | null;
   ordering: number;
   is_published: boolean;
+  is_featured?: boolean;
   created_by: string | null;
 };
+
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -136,6 +138,18 @@ function AdminPage() {
     await refresh();
   }
 
+  async function setFeatured(id: string, featured: boolean) {
+    if (featured) {
+      // Ensure only one featured — demote any current featured first
+      await supabase.from("workshops").update({ is_featured: false }).eq("is_featured", true);
+    }
+    const { error } = await supabase.from("workshops").update({ is_featured: featured }).eq("id", id);
+    if (error) return alert(error.message);
+    await refresh();
+  }
+
+
+
   async function approve(rid: string, r: (typeof requests)[number]) {
     if (r.kind === "workshop_update" && r.payload) {
       const p = r.payload as unknown as Workshop;
@@ -236,7 +250,14 @@ function AdminPage() {
                 >
                   <div className="font-mono text-xs text-signal">{w.code}</div>
                   <div>
-                    <div className="font-display text-xl">{w.title}</div>
+                    <div className="font-display text-xl">
+                      {w.title}
+                      {w.is_featured && (
+                        <span className="ml-2 border border-signal px-2 py-0.5 align-middle font-mono text-[9px] uppercase tracking-[0.24em] text-signal">
+                          ★ MAIN POSTER
+                        </span>
+                      )}
+                    </div>
                     <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                       {w.event_date ?? "—"} · {w.status} ·{" "}
                       <span className={w.is_published ? "text-signal" : "text-foreground"}>
@@ -245,6 +266,17 @@ function AdminPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+                    {isAdmin && (
+                      <button
+                        onClick={() => setFeatured(w.id, !w.is_featured)}
+                        className={`border px-3 py-1 hover:border-signal ${
+                          w.is_featured ? "border-signal text-signal" : "border-hairline"
+                        }`}
+                        title={w.is_featured ? "Remove from main poster" : "Promote to main poster"}
+                      >
+                        {w.is_featured ? "DEMOTE" : "PROMOTE"}
+                      </button>
+                    )}
                     <button
                       onClick={() => setEditing(w)}
                       className="border border-hairline px-3 py-1 hover:border-signal"
@@ -260,6 +292,7 @@ function AdminPage() {
                       </button>
                     )}
                   </div>
+
                 </div>
               ))}
             </div>

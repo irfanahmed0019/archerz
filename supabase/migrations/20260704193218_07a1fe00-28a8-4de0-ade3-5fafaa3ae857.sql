@@ -1,0 +1,2 @@
+ALTER TABLE public.workshops ADD COLUMN IF NOT EXISTS is_featured boolean NOT NULL DEFAULT false;
+CREATE UNIQUE INDEX IF NOT EXISTS workshops_only_one_featured ON public.workshops ((is_featured)) WHERE is_featured = true;
