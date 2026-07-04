@@ -34,7 +34,7 @@ function AdminPage() {
   const [requests, setRequests] = useState<
     Array<{ id: string; kind: string; payload: Record<string, unknown>; status: string; created_at: string }>
   >([]);
-  const [tab, setTab] = useState<"cards" | "requests" | "team">("cards");
+  const [tab, setTab] = useState<"cards" | "requests" | "team" | "members">("cards");
   const [editing, setEditing] = useState<Workshop | null>(null);
   const [creating, setCreating] = useState(false);
 
@@ -170,8 +170,8 @@ function AdminPage() {
           </div>
         )}
 
-        <div className="mb-8 flex gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
-          {(["cards", "requests", "team"] as const).map((t) => (
+        <div className="mb-8 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+          {(["cards", "requests", "team", ...(isAdmin ? (["members"] as const) : [])] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -278,6 +278,8 @@ function AdminPage() {
         {tab === "team" && (
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
+
+        {tab === "members" && isAdmin && <MembersPanel />}
       </div>
 
       {(editing || creating) && (
@@ -477,6 +479,70 @@ function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => 
             )}
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function MembersPanel() {
+  const [members, setMembers] = useState<
+    Array<{ id: string; email: string | null; display_name: string | null; created_at?: string | null }>
+  >([]);
+  const [q, setQ] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, email, display_name, created_at")
+        .order("created_at", { ascending: false });
+      setMembers((data ?? []) as typeof members);
+    })();
+  }, []);
+
+  const filtered = members.filter(
+    (m) =>
+      !q ||
+      (m.email ?? "").toLowerCase().includes(q.toLowerCase()) ||
+      (m.display_name ?? "").toLowerCase().includes(q.toLowerCase()),
+  );
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-display text-3xl tracking-tight md:text-5xl">
+          Members <span className="text-signal">/ {members.length}</span>
+        </h1>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="search email or name"
+          className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+        />
+      </div>
+      <div className="border-t border-hairline">
+        <div className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+          <div>NAME</div>
+          <div>EMAIL</div>
+          <div>JOINED</div>
+        </div>
+        {filtered.map((m) => (
+          <div
+            key={m.id}
+            className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-3 font-mono text-xs"
+          >
+            <div className="text-foreground">{m.display_name ?? "—"}</div>
+            <div className="text-muted-foreground">{m.email ?? "—"}</div>
+            <div className="text-signal">
+              {m.created_at ? new Date(m.created_at).toLocaleDateString() : "—"}
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <p className="py-6 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
+            [ NO MEMBERS ]
+          </p>
+        )}
       </div>
     </div>
   );
