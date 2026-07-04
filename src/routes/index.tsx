@@ -1068,7 +1068,7 @@ function Footer() {
               items: [
                 ["Documentation", "#"],
                 ["GitHub", "#"],
-                ["Archive", "#"],
+                ["Admin", "/auth"],
               ],
             },
           ].map((col) => (
