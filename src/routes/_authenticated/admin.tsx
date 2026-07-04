@@ -138,6 +138,18 @@ function AdminPage() {
     await refresh();
   }
 
+  async function setFeatured(id: string, featured: boolean) {
+    if (featured) {
+      // Ensure only one featured — demote any current featured first
+      await supabase.from("workshops").update({ is_featured: false }).eq("is_featured", true);
+    }
+    const { error } = await supabase.from("workshops").update({ is_featured: featured }).eq("id", id);
+    if (error) return alert(error.message);
+    await refresh();
+  }
+
+
+
   async function approve(rid: string, r: (typeof requests)[number]) {
     if (r.kind === "workshop_update" && r.payload) {
       const p = r.payload as unknown as Workshop;
