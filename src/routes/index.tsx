@@ -343,6 +343,10 @@ function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boole
       alt="ARCHERZ emblem"
       width={size}
       height={size}
+      loading="eager"
+      decoding="async"
+      // @ts-expect-error fetchpriority is a valid HTML attribute
+      fetchpriority="high"
       className="block"
       style={invert ? { filter: "invert(1)" } : undefined}
     />
@@ -902,7 +906,7 @@ function PriorityEvent() {
       <div className="bg-background">
         <Marquee
           size="lg"
-          speed="slow"
+          speed="normal"
           items={["REGISTER NOW", "MINI MILITIA '26", "SQUAD 4v4", "OCT 25", "ENTER THE ARENA"]}
         />
       </div>
