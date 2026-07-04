@@ -170,8 +170,8 @@ function AdminPage() {
           </div>
         )}
 
-        <div className="mb-8 flex gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
-          {(["cards", "requests", "team"] as const).map((t) => (
+        <div className="mb-8 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+          {(["cards", "requests", "team", ...(isAdmin ? (["members"] as const) : [])] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
