@@ -809,13 +809,54 @@ function Workshops() {
   );
 }
 
+type FeaturedPoster = {
+  title: string | null;
+  image_url: string | null;
+  event_date: string | null;
+  duration: string | null;
+  body: string | null;
+  long_description: string | null;
+  register_url: string | null;
+  status: string | null;
+};
+
 function PriorityEvent() {
   const tilt = useTilt<HTMLDivElement>(10);
+  const [featured, setFeatured] = useState<FeaturedPoster | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("workshops")
+        .select("title,image_url,event_date,duration,body,long_description,register_url,status")
+        .eq("is_featured", true)
+        .eq("is_published", true)
+        .maybeSingle();
+      if (data) setFeatured(data as FeaturedPoster);
+    })();
+  }, []);
+
+  const posterSrc = featured?.image_url || miniMilitia;
+  const rawTitle = featured?.title ?? "MINI militia.";
+  const [titleHead, titleTail] = (() => {
+    const parts = rawTitle.trim().split(/\s+/);
+    if (parts.length < 2) return [parts[0] ?? rawTitle, ""];
+    return [parts.slice(0, -1).join(" "), parts[parts.length - 1]];
+  })();
+  const dateLabel = featured?.event_date || "OCT · 25";
+  const durationLabel = featured?.duration || "10:00 → 16:00";
+  const description =
+    featured?.long_description ||
+    featured?.body ||
+    "Squad up. 4v4 mobile combat, live scoreboard, one lab, one afternoon. Bring your own device. Winner takes the pot. Losers get pizza.";
+  const registerHref = featured?.register_url || "#community";
+  const statusLabel = (featured?.status || "OPEN").toUpperCase();
+
   return (
     <section id="events" className="relative border-y border-hairline bg-background">
       {/* Blurred poster ambience */}
       <img
-        src={miniMilitia}
+        src={posterSrc}
         alt=""
         aria-hidden
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 blur-2xl"
@@ -834,7 +875,7 @@ function PriorityEvent() {
         <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
           <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
           <div className="text-muted-foreground">
-            TYPE: <span className="text-foreground">ESPORTS</span>
+            STATUS: <span className="text-foreground">{statusLabel}</span>
           </div>
         </div>
 
@@ -843,17 +884,21 @@ function PriorityEvent() {
             ● LIVE '26
           </span>
           <span className="sticker" style={{ transform: "rotate(2deg)" }}>
-            OCT · 25
+            {dateLabel}
           </span>
           <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
-            10:00 → 16:00
+            {durationLabel}
           </span>
         </div>
 
         <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
-          MINI
-          <br />
-          <span className="italic font-serif font-normal text-signal">militia.</span>
+          {titleHead}
+          {titleTail && (
+            <>
+              <br />
+              <span className="italic font-serif font-normal text-signal">{titleTail}</span>
+            </>
+          )}
         </h2>
 
         <div className="mt-14 grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-start">
@@ -863,8 +908,8 @@ function PriorityEvent() {
             className="relative border border-hairline bg-surface transition-transform duration-200 will-change-transform [transform-style:preserve-3d]"
           >
             <img
-              src={miniMilitia}
-              alt="Mini Militia tournament poster"
+              src={posterSrc}
+              alt={featured?.title ? `${featured.title} poster` : "Mini Militia tournament poster"}
               className="block h-auto w-full object-cover"
               loading="lazy"
             />
@@ -872,14 +917,13 @@ function PriorityEvent() {
               ARCHERZ · PRESENTS
             </div>
             <div className="absolute right-0 bottom-0 sticker m-3" style={{ transform: "rotate(3deg)" }}>
-              32 SEATS
+              {statusLabel}
             </div>
           </div>
 
           <div className="flex flex-col gap-6">
             <p className="max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
-              Squad up. 4v4 mobile combat, live scoreboard, one lab, one afternoon.
-              Bring your own device. Winner takes the pot. Losers get pizza.
+              {description}
             </p>
 
             <div className="panel p-6">
@@ -888,11 +932,9 @@ function PriorityEvent() {
               </div>
               <div className="mt-4 divide-y divide-hairline">
                 {[
-                  ["DATE", "OCT 25, 2026"],
-                  ["TIME", "10:00 — 16:00"],
-                  ["LOCATION", "COMPUTER LAB 01"],
-                  ["FORMAT", "SQUAD · 4v4"],
-                  ["SEATS", "32 PLAYERS"],
+                  ["DATE", dateLabel],
+                  ["TIME", durationLabel],
+                  ["STATUS", statusLabel],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between py-2.5 font-mono text-[11px] uppercase tracking-[0.18em]">
                     <span className="text-muted-foreground">{k}</span>
@@ -900,7 +942,7 @@ function PriorityEvent() {
                   </div>
                 ))}
               </div>
-              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center" data-cursor-hover>
+              <a href={registerHref} target={registerHref.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center" data-cursor-hover>
                 → REGISTER
               </a>
             </div>
@@ -913,12 +955,13 @@ function PriorityEvent() {
         <Marquee
           size="lg"
           speed="normal"
-          items={["REGISTER NOW", "MINI MILITIA '26", "SQUAD 4v4", "OCT 25", "ENTER THE ARENA"]}
+          items={["REGISTER NOW", (featured?.title || "MINI MILITIA '26").toUpperCase(), dateLabel, "ENTER THE ARENA"]}
         />
       </div>
     </section>
   );
 }
+
 
 function Team() {
   return (
