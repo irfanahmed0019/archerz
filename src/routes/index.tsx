@@ -457,12 +457,12 @@ function Hero() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
-            → REGISTER NOW
+          <a href="#events" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="EVENTS">
+            → SEE EVENTS
           </a>
-          <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
-            SEE EVENTS
-          </a>
+          <Link to="/auth" className="btn-ghost" data-cursor-hover data-cursor-text="LOGIN">
+            LOGIN
+          </Link>
         </div>
       </div>
 
