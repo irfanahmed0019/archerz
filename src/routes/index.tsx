@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png.asset.json";
+import heroBackdrop from "@/assets/hero-backdrop.jpg";
+import bannerWorkshops from "@/assets/banner-workshops.jpg";
+import bannerEvent from "@/assets/banner-event.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
-    meta: [
-      { property: "og:url", content: "/" },
-    ],
+    meta: [{ property: "og:url", content: "/" }],
     links: [{ rel: "canonical", href: "/" }],
   }),
 });
@@ -22,27 +23,21 @@ const NAV_LINKS = [
 const PILLARS = [
   {
     tag: "01",
-    title: "LEARN",
-    body: "Learn beyond the classroom through practical experience and teamwork.",
-    icon: (
-      <path d="M4 6h16M4 12h10M4 18h16" />
-    ),
+    kicker: "LEARN",
+    title: "Beyond the classroom.",
+    body: "Practical, hands-on experience — sessions that meet you where you are and push where you're going.",
   },
   {
     tag: "02",
-    title: "BUILD",
-    body: "Turn ideas into real projects using modern technologies and hands-on collaboration.",
-    icon: (
-      <path d="M4 20h16M6 20V10l6-4 6 4v10M10 20v-6h4v6" />
-    ),
+    kicker: "BUILD",
+    title: "Ideas into artefacts.",
+    body: "Real projects with real tooling. Ship things you're proud to put your name on.",
   },
   {
     tag: "03",
-    title: "INNOVATE",
-    body: "Explore emerging technologies and create solutions for real-world challenges.",
-    icon: (
-      <path d="M12 3l3 6 6 .9-4.5 4.2 1.1 6.4L12 17.8 6.4 20.5 7.5 14 3 9.9 9 9z" />
-    ),
+    kicker: "INNOVATE",
+    title: "Tomorrow's stack, today.",
+    body: "Explore emerging tech and solve problems that don't already have a Stack Overflow answer.",
   },
 ];
 
@@ -52,6 +47,7 @@ const WORKSHOPS = [
     title: "DESIGN WITH AI",
     body: "Create websites, interfaces, and digital experiences using modern AI-powered design tools.",
     date: "OCT 12",
+    duration: "3H",
     status: "OPEN",
   },
   {
@@ -59,6 +55,7 @@ const WORKSHOPS = [
     title: "TYPING SPEED CHALLENGE",
     body: "Test your typing speed, accuracy, and consistency in a competitive real-time environment.",
     date: "OCT 17",
+    duration: "2H",
     status: "OPEN",
   },
   {
@@ -66,6 +63,7 @@ const WORKSHOPS = [
     title: "BLIND CODING CHALLENGE",
     body: "Test your ability to write accurate, functional code without seeing your screen.",
     date: "TBD",
+    duration: "2H",
     status: "QUEUED",
   },
 ];
@@ -112,7 +110,7 @@ function initials(name: string) {
     .slice(0, 2);
 }
 
-function Logo({ size = 28 }: { size?: number }) {
+function LogoMark({ size = 28, invert = true }: { size?: number; invert?: boolean }) {
   return (
     <img
       src={archLogo.url}
@@ -120,30 +118,40 @@ function Logo({ size = 28 }: { size?: number }) {
       width={size}
       height={size}
       className="block"
-      style={{ filter: "invert(1)" }}
+      style={invert ? { filter: "invert(1)" } : undefined}
     />
   );
 }
 
-function TickerBar() {
-  const items = [
-    "SYSTEM_ONLINE",
-    "EST. 2026",
-    "GPTC ATTINGAL",
-    "CS & TECHNOLOGY DIVISION",
-    "LEARN / BUILD / INNOVATE",
-    "MOD_01 · MOD_02 · MOD_03",
-    "MINI MILITIA · OCT 25",
-    "STATUS: RECRUITING",
-  ];
-  const loop = [...items, ...items];
+function Marquee({
+  items,
+  speed = "normal",
+  size = "md",
+}: {
+  items: string[];
+  speed?: "slow" | "normal" | "fast";
+  size?: "sm" | "md" | "lg";
+}) {
+  const loop = [...items, ...items, ...items];
+  const anim =
+    speed === "slow"
+      ? "animate-marquee-slow"
+      : speed === "fast"
+        ? "animate-marquee-fast"
+        : "animate-marquee";
+  const sizeCls =
+    size === "lg"
+      ? "text-4xl md:text-6xl font-display tracking-tight py-4"
+      : size === "sm"
+        ? "text-[11px] font-mono tracking-[0.24em] py-2"
+        : "text-xs md:text-sm font-mono tracking-[0.22em] py-3";
   return (
-    <div className="border-y border-hairline bg-surface overflow-hidden">
-      <div className="flex animate-marquee whitespace-nowrap py-2.5 font-mono text-xs tracking-[0.24em] text-muted-foreground">
+    <div className="overflow-hidden">
+      <div className={`flex whitespace-nowrap ${anim} ${sizeCls}`}>
         {loop.map((t, i) => (
-          <span key={i} className="mx-6 flex items-center gap-6">
-            <span className="inline-block h-1.5 w-1.5 bg-signal" />
-            {t}
+          <span key={i} className="mx-6 md:mx-10 inline-flex items-center gap-6 md:gap-10">
+            <span>{t}</span>
+            <span className="inline-block h-1.5 w-1.5 shrink-0 bg-signal" />
           </span>
         ))}
       </div>
@@ -164,19 +172,21 @@ function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors ${
-        scrolled ? "border-hairline bg-background/85 backdrop-blur" : "border-transparent bg-background"
+      className={`fixed inset-x-0 top-0 z-50 transition-all ${
+        scrolled
+          ? "border-b border-hairline bg-background/80 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 md:px-8">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
         <a href="#top" className="flex items-center gap-3">
-          <Logo size={28} />
+          <LogoMark size={26} />
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-lg font-bold tracking-[0.18em] text-foreground">
+            <span className="font-display text-base tracking-[0.24em] text-foreground">
               ARCHERS
             </span>
             <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline">
-              /GPTC
+              /GPTC · '26
             </span>
           </div>
         </a>
@@ -186,16 +196,17 @@ function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+              className="group relative font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
             >
               {l.label}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-signal transition-all group-hover:w-full" />
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
           <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex">
-            JOIN_COMMUNITY
+            → ENLIST
           </a>
           <button
             aria-label="Toggle menu"
@@ -215,7 +226,7 @@ function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="border-b border-hairline py-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
+                className="border-b border-hairline py-3 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground"
               >
                 {l.label}
               </a>
@@ -225,7 +236,7 @@ function Nav() {
               onClick={() => setOpen(false)}
               className="btn-brutal btn-brutal-hover mt-3 justify-center"
             >
-              JOIN_COMMUNITY
+              → ENLIST
             </a>
           </div>
         </div>
@@ -236,165 +247,181 @@ function Nav() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden border-b border-hairline">
-      <div className="absolute inset-0 bg-grid opacity-70" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-40" aria-hidden />
-      {/* Radial glow */}
+    <section id="top" className="relative min-h-screen overflow-hidden">
+      {/* Backdrop image */}
+      <img
+        src={heroBackdrop}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
+      />
+      {/* Overlays */}
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" aria-hidden />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/3 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle, color-mix(in oklab, var(--color-signal) 22%, transparent) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 85%)",
         }}
         aria-hidden
       />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-30" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-28">
-        {/* Meta strip */}
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
-            SYS.ARCHERS // v1.0 // ONLINE
-          </div>
-          <div>LAT 8.6982° N · LON 76.8156° E</div>
+      {/* Top strip */}
+      <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
+          LOCATION · GPTC ATTINGAL
         </div>
+        <div className="hidden md:block">LAT 8.6982°N · LON 76.8156°E</div>
+        <div className="text-foreground">'26</div>
+      </div>
 
-        <div className="grid gap-10 md:grid-cols-[auto_1fr] md:items-end">
-          {/* Big logo */}
-          <div className="relative flex items-center justify-center">
-            <div className="corner-ticks p-6 md:p-10">
-              <img
-                src={archLogo.url}
-                alt="ARCHERS logo mark"
-                className="h-40 w-40 md:h-56 md:w-56"
-                style={{ filter: "invert(1)" }}
+      {/* Hero centerpiece */}
+      <div className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 pb-16 pt-16 text-center md:px-10 md:pt-24 md:pb-24">
+        {/* Bracket-framed logo + wordmark */}
+        <div className="hero-frame p-6 md:p-10">
+          <div className="flex flex-col items-center gap-5">
+            <div className="relative">
+              <div
+                className="absolute inset-0 -z-10 blur-2xl"
+                style={{
+                  background:
+                    "radial-gradient(circle, color-mix(in oklab, var(--color-signal) 35%, transparent) 0%, transparent 70%)",
+                }}
+                aria-hidden
               />
+              <LogoMark size={110} />
             </div>
-          </div>
-
-          <div>
-            <div className="eyebrow mb-4">[ 00 // INIT ]</div>
-            <h1 className="font-display text-5xl font-bold leading-[0.95] tracking-tight text-foreground md:text-8xl">
-              ENGINEER
-              <br />
-              THE{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-signal">FUTURE</span>
-                <span
-                  className="absolute inset-x-0 bottom-1 z-0 h-3 md:h-5"
-                  style={{ background: "color-mix(in oklab, var(--color-signal) 20%, transparent)" }}
-                  aria-hidden
-                />
-              </span>
-              <span className="ml-2 inline-block h-[0.9em] w-[0.5ch] translate-y-1 bg-signal align-baseline animate-blink" />
-            </h1>
-            <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-muted-foreground md:text-lg">
-              Association of Computer Science &amp; Technology Students, Government Polytechnic
-              College Attingal. Building the next generation of developers, innovators, and
-              technology leaders.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
-              <span className="text-foreground">LEARN</span>
-              <span className="text-signal">/</span>
-              <span className="text-foreground">BUILD</span>
-              <span className="text-signal">/</span>
-              <span className="text-foreground">INNOVATE</span>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a href="#community" className="btn-brutal btn-brutal-hover">
-                → JOIN ARCHERS
-              </a>
-              <a href="#events" className="btn-ghost">
-                EXPLORE EVENTS
-              </a>
-            </div>
-
-            <div className="mt-10 grid max-w-md grid-cols-3 gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              <div className="border-l-2 border-signal pl-3">
-                <div className="text-foreground font-semibold">EST</div>
-                <div className="mt-1">2026</div>
-              </div>
-              <div className="border-l-2 border-signal pl-3">
-                <div className="text-foreground font-semibold">DIV</div>
-                <div className="mt-1">CS &amp; TECH</div>
-              </div>
-              <div className="border-l-2 border-signal pl-3">
-                <div className="text-foreground font-semibold">MODE</div>
-                <div className="mt-1">RECRUITING</div>
-              </div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
+              [ ASSN. OF CS &amp; TECH · EST. 2026 ]
             </div>
           </div>
         </div>
+
+        {/* Massive display headline */}
+        <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
+          ENGINEER
+          <br />
+          <span className="italic font-serif text-signal font-normal">the future</span>
+        </h1>
+
+        <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          Association of Computer Science &amp; Technology Students at Government Polytechnic
+          College, Attingal. Building the next generation of developers, innovators, and
+          technology leaders.
+        </p>
+
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <a href="#community" className="btn-brutal btn-brutal-hover">
+            → JOIN ARCHERS
+          </a>
+          <a href="#events" className="btn-ghost">
+            EXPLORE EVENTS
+          </a>
+        </div>
+
+        {/* Trail metadata */}
+        <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-6 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <div className="text-left">
+            <div className="text-signal">SYS.STATUS</div>
+            <div className="mt-1 text-foreground">ONLINE</div>
+          </div>
+          <div className="text-center">
+            <div className="text-signal">DIVISION</div>
+            <div className="mt-1 text-foreground">CS &amp; TECH</div>
+          </div>
+          <div className="text-right">
+            <div className="text-signal">MODE</div>
+            <div className="mt-1 text-foreground">RECRUITING</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll cue */}
+      <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+        ↓ SCROLL_TO_INITIATE
       </div>
     </section>
   );
 }
 
+function TickerBand() {
+  return (
+    <div className="relative border-y border-hairline bg-background text-foreground">
+      <Marquee
+        size="sm"
+        items={[
+          ">> SYSTEM ONLINE",
+          "MULTI-DISCIPLINE MODULES ACTIVE",
+          "ACCESS GRANTED",
+          "ARCHERS '26",
+          "GPTC ATTINGAL",
+          "CS · TECHNOLOGY DIVISION",
+          "LEARN / BUILD / INNOVATE",
+        ]}
+      />
+    </div>
+  );
+}
+
+function DisplayMarquee({ text }: { text: string }) {
+  const items = Array(8).fill(text);
+  return (
+    <div className="border-y border-hairline bg-background py-4">
+      <Marquee items={items} size="lg" speed="slow" />
+    </div>
+  );
+}
+
 function Manifesto() {
   return (
-    <section id="about" className="border-b border-hairline">
-      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <div className="grid gap-12 md:grid-cols-12">
-          <div className="md:col-span-4">
-            <div className="eyebrow">01 // THE IDENTITY</div>
-            <div className="mt-4 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
-              MANIFESTO
+    <section id="about" className="relative overflow-hidden">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36">
+        {/* Section header */}
+        <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+              01 // THE IDENTITY
             </div>
-            <div className="mt-8 hidden md:block panel p-5">
-              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-signal">
-                STATUS
-              </div>
-              <div className="mt-3 font-mono text-sm text-foreground">
-                &gt; system.init()
-                <br />
-                &gt; associate.ready
-                <br />
-                &gt; awaiting_operators_
-                <span className="inline-block h-3 w-2 bg-signal align-middle animate-blink" />
-              </div>
-            </div>
-          </div>
-          <div className="md:col-span-8">
-            <h2 className="font-display text-3xl font-bold leading-tight text-foreground md:text-5xl">
-              ARCHERS IS NOT JUST AN ASSOCIATION.
+            <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-7xl">
+              Not just an
               <br />
-              <span className="text-muted-foreground">
-                MOVE BEYOND TEXTBOOKS AND START CREATING.
+              <span className="italic font-serif font-normal text-muted-foreground">
+                association.
               </span>
             </h2>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              From workshops to real-world projects, ARCHERS creates opportunities for students to
-              learn, build, and grow together. We believe the best way to learn technology is by
-              creating with others — hands on the keyboard, not just eyes on the slides.
-            </p>
-
-            <div className="mt-14 grid gap-5 sm:grid-cols-3">
-              {PILLARS.map((p) => (
-                <div key={p.title} className="panel corner-ticks p-6">
-                  <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                    <span className="text-signal">{p.tag}</span>
-                    <span>PILLAR</span>
-                  </div>
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="mt-6 h-8 w-8 text-signal"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.6}
-                    strokeLinecap="square"
-                  >
-                    {p.icon}
-                  </svg>
-                  <div className="mt-6 font-display text-xl font-bold tracking-wide text-foreground">
-                    {p.title}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.body}</p>
-                </div>
-              ))}
-            </div>
           </div>
+          <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            Move beyond textbooks and start creating. From workshops to real-world projects,
+            ARCHERS is where students learn, build, and grow together.
+          </div>
+        </div>
+
+        {/* Pillars */}
+        <div className="mt-16 grid gap-0 border border-hairline md:grid-cols-3">
+          {PILLARS.map((p, i) => (
+            <div
+              key={p.tag}
+              className={`relative flex flex-col justify-between p-8 md:p-12 ${
+                i < PILLARS.length - 1 ? "border-b border-hairline md:border-b-0 md:border-r" : ""
+              }`}
+            >
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
+                <span className="text-signal">{p.tag}</span>
+                <span className="text-muted-foreground">PILLAR</span>
+              </div>
+              <div className="mt-14">
+                <div className="font-mono text-[10px] uppercase tracking-[0.36em] text-signal">
+                  {p.kicker}
+                </div>
+                <h3 className="mt-3 font-serif italic text-3xl leading-tight text-foreground md:text-4xl">
+                  {p.title}
+                </h3>
+                <p className="mt-5 text-sm leading-relaxed text-muted-foreground">{p.body}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -403,60 +430,99 @@ function Manifesto() {
 
 function Workshops() {
   return (
-    <section id="workshops" className="border-b border-hairline">
-      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <div className="eyebrow">02 // MODULES</div>
-            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-              TECHNICAL WORKSHOPS
-            </h2>
-            <p className="mt-3 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
-              [ BUILDING SKILLS BEYOND CLASSROOMS ]
-            </p>
+    <section id="workshops" className="relative">
+      {/* Cinematic banner */}
+      <div className="relative overflow-hidden border-y border-hairline">
+        <img
+          src={bannerWorkshops}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover opacity-70"
+          loading="lazy"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 45%, transparent) 0%, color-mix(in oklab, var(--color-background) 20%, transparent) 40%, color-mix(in oklab, var(--color-background) 85%, transparent) 100%)",
+          }}
+          aria-hidden
+        />
+        <div className="relative mx-auto flex max-w-[1400px] flex-col items-center justify-center px-5 py-28 text-center md:px-10 md:py-40">
+          <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+            [ 02 // TRAINING INTERFACE ACTIVE ]
           </div>
-          <a href="#events" className="btn-ghost self-start md:self-auto">
-            VIEW_SCHEDULE →
+          <h2 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-foreground md:text-[9rem]">
+            UPGRADE
+            <br />
+            <span className="italic font-serif font-normal">your skills.</span>
+          </h2>
+          <a href="#workshops-list" className="btn-brutal btn-brutal-hover mt-10">
+            ↗ ENTER THE ARENA
           </a>
         </div>
+      </div>
 
-        <div className="mt-14 grid gap-0 border border-hairline md:grid-cols-3">
-          {WORKSHOPS.map((w, i) => (
+      {/* Ticker */}
+      <div className="border-b border-hairline bg-background">
+        <Marquee
+          size="sm"
+          speed="fast"
+          items={[
+            ">> TRAINING INTERFACE ACTIVE",
+            "CORE MODULES DEPLOYED",
+            "INITIATE BUILD SEQUENCE",
+            "MOD_01 · MOD_02 · MOD_03",
+          ]}
+        />
+      </div>
+
+      {/* Module list */}
+      <div id="workshops-list" className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <h3 className="font-display text-3xl tracking-tight text-foreground md:text-5xl">
+            TECHNICAL WORKSHOPS
+          </h3>
+          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+            [ BUILDING SKILLS BEYOND CLASSROOMS ]
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-hairline">
+          {WORKSHOPS.map((w) => (
             <a
               key={w.id}
               href="#community"
-              className={`group relative flex flex-col justify-between p-8 transition-colors hover:bg-surface ${
-                i < WORKSHOPS.length - 1 ? "border-b border-hairline md:border-b-0 md:border-r" : ""
-              }`}
+              className="group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-hairline py-8 transition-colors hover:bg-surface md:grid-cols-[120px_1fr_120px_140px_auto] md:gap-8 md:py-10 md:px-6"
             >
-              <div>
-                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                  <span className="text-signal">{w.id}</span>
-                  <span
-                    className={`px-2 py-1 border ${
-                      w.status === "OPEN"
-                        ? "border-signal text-signal"
-                        : "border-hairline text-muted-foreground"
-                    }`}
-                  >
-                    {w.status}
-                  </span>
-                </div>
-                <h3 className="mt-8 font-display text-2xl font-bold leading-tight text-foreground">
-                  {w.title}
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
+              <div className="font-mono text-xs uppercase tracking-[0.24em] text-signal">
+                {w.id}
               </div>
-              <div className="mt-10 flex items-end justify-between">
-                <div>
-                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                    DATE
-                  </div>
-                  <div className="mt-1 font-mono text-lg text-foreground">{w.date}</div>
+              <div>
+                <div className="font-display text-2xl leading-tight text-foreground md:text-4xl">
+                  {w.title}
                 </div>
-                <span className="font-mono text-xs uppercase tracking-[0.24em] text-signal transition-transform group-hover:translate-x-1">
-                  →
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  {w.body}
+                </p>
+              </div>
+              <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <div className="text-signal">DATE</div>
+                <div className="mt-1 text-foreground">{w.date}</div>
+              </div>
+              <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em]">
+                <span
+                  className={`inline-flex px-2 py-1 border ${
+                    w.status === "OPEN"
+                      ? "border-signal text-signal"
+                      : "border-hairline text-muted-foreground"
+                  }`}
+                >
+                  {w.status}
                 </span>
+              </div>
+              <div className="font-mono text-2xl text-signal transition-transform group-hover:translate-x-2">
+                ↗
               </div>
             </a>
           ))}
@@ -468,63 +534,92 @@ function Workshops() {
 
 function PriorityEvent() {
   return (
-    <section id="events" className="relative overflow-hidden border-b border-hairline bg-surface">
-      <div className="absolute inset-0 bg-grid-fine opacity-40" aria-hidden />
-      <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
-          <div className="eyebrow">03 // PRIORITY EVENT</div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-            EVENT_TYPE: <span className="text-signal">ESPORTS</span>
-          </div>
-        </div>
+    <section id="events" className="relative">
+      <div className="relative overflow-hidden border-y border-hairline">
+        <img
+          src={bannerEvent}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover opacity-80"
+          loading="lazy"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 25%, transparent) 0%, transparent 40%, color-mix(in oklab, var(--color-background) 80%, transparent) 100%)",
+          }}
+          aria-hidden
+        />
 
-        <div className="grid gap-8 border border-foreground bg-background md:grid-cols-[1.4fr_1fr]">
-          <div className="border-b border-hairline p-8 md:border-b-0 md:border-r md:p-14">
-            <div className="font-mono text-xs uppercase tracking-[0.24em] text-signal">
-              [ FLAGSHIP TOURNAMENT ]
+        <div className="relative mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36">
+          {/* Top row */}
+          <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
+            <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
+            <div className="text-muted-foreground">
+              EVENT_TYPE: <span className="text-foreground">ESPORTS</span>
             </div>
-            <h2 className="mt-4 font-display text-4xl font-bold leading-[0.95] tracking-tight text-foreground md:text-6xl">
-              MINI MILITIA
-              <br />
-              TOURNAMENT
-            </h2>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground">
+          </div>
+
+          {/* Sticker date */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <span className="sticker" style={{ transform: "rotate(-3deg)" }}>
+              ● LIVE '26
+            </span>
+            <span className="sticker" style={{ transform: "rotate(2deg)" }}>
+              OCT · 25
+            </span>
+            <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
+              10:00 → 16:00
+            </span>
+          </div>
+
+          {/* Massive event type */}
+          <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
+            MINI
+            <br />
+            <span className="italic font-serif font-normal text-signal">militia.</span>
+          </h2>
+
+          <div className="mt-10 grid gap-10 md:grid-cols-[1.3fr_1fr]">
+            <p className="max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
               Join the ultimate battle. Show off your skills in our multiplayer combat tournament —
-              solo grit, squad tactics, and a live scoreboard until one team stands.
+              solo grit, squad tactics, and a live scoreboard until one team stands. Only 32 seats.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a href="#community" className="btn-brutal btn-brutal-hover">
+
+            <div className="panel p-6">
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-signal">
+                EVENT_SPECIFICATIONS
+              </div>
+              <div className="mt-4 divide-y divide-hairline">
+                {[
+                  ["DATE", "OCT 25, 2026"],
+                  ["TIME", "10:00 — 16:00"],
+                  ["LOCATION", "COMPUTER LAB 01"],
+                  ["FORMAT", "SQUAD // 4v4"],
+                  ["SEATS", "32 OPERATORS"],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex items-center justify-between py-2.5 font-mono text-[11px] uppercase tracking-[0.18em]">
+                    <span className="text-muted-foreground">{k}</span>
+                    <span className="text-foreground">{v}</span>
+                  </div>
+                ))}
+              </div>
+              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center">
                 → REGISTER NOW
               </a>
-              <a href="#contact" className="btn-ghost">
-                CONTACT ORGANISER
-              </a>
-            </div>
-          </div>
-
-          <div className="p-8 md:p-10">
-            <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-              EVENT_SPECIFICATIONS
-            </div>
-            <div className="mt-6 divide-y divide-hairline border-y border-hairline">
-              {[
-                { k: "DATE", v: "OCT 25, 2026" },
-                { k: "TIME", v: "10:00 — 16:00" },
-                { k: "LOCATION", v: "COMPUTER LAB 01" },
-                { k: "FORMAT", v: "SQUAD // 4v4" },
-                { k: "SEATS", v: "32 OPERATORS" },
-              ].map((row) => (
-                <div key={row.k} className="flex items-center justify-between py-3 font-mono text-xs uppercase tracking-[0.16em]">
-                  <span className="text-muted-foreground">{row.k}</span>
-                  <span className="text-foreground">{row.v}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 border border-signal p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
-              ⚠ REGISTRATION CLOSES 24H BEFORE START
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Under-ticker */}
+      <div className="bg-background">
+        <Marquee
+          size="lg"
+          speed="slow"
+          items={["REGISTER NOW", "MINI MILITIA '26", "SQUAD 4v4", "OCT 25", "ENTER THE ARENA"]}
+        />
       </div>
     </section>
   );
@@ -532,45 +627,44 @@ function PriorityEvent() {
 
 function Team() {
   return (
-    <section id="team" className="border-b border-hairline">
-      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <section id="team" className="relative border-t border-hairline">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+        <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="eyebrow">04 // OPERATORS</div>
-            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-              MEET THE TEAM
+            <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+              04 // OPERATORS
+            </div>
+            <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
+              Meet the
+              <br />
+              <span className="italic font-serif font-normal text-muted-foreground">unit.</span>
             </h2>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-              The core unit running ARCHERS — students building the association from the ground up.
-            </p>
           </div>
           <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-            HEADCOUNT: <span className="text-signal">{TEAM.length}</span> · CYCLE 2026
+            HEADCOUNT · <span className="text-signal">{TEAM.length}</span> · CYCLE 2026
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-0 border border-hairline sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-1 gap-0 border border-hairline sm:grid-cols-2 lg:grid-cols-4">
           {TEAM.map((m, i) => (
             <div
               key={m.name}
-              className={`group relative p-6 transition-colors hover:bg-surface ${
-                i % 2 === 1 ? "border-l border-hairline" : ""
-              } ${i >= 2 ? "border-t border-hairline" : ""} sm:!border-l sm:[&:nth-child(3n+1)]:!border-l-0 sm:[&:nth-child(-n+3)]:!border-t-0 lg:!border-l lg:[&:nth-child(4n+1)]:!border-l-0 lg:[&:nth-child(-n+4)]:!border-t-0`}
+              className="group relative flex flex-col justify-between p-6 md:p-8 border-t border-l border-hairline first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 lg:[&:nth-child(-n+4)]:border-t-0 [&:nth-child(odd)]:border-l-0 sm:[&:nth-child(2n+1)]:border-l-0 lg:[&:nth-child(4n+1)]:border-l-0 lg:[&:nth-child(odd)]:border-l"
             >
-              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                <span className="text-signal">
-                  #{String(i + 1).padStart(2, "0")}
-                </span>
-                <span>OPR</span>
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
+                <span className="text-signal">#{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-muted-foreground">OPR</span>
               </div>
-              <div className="mt-6 flex h-24 w-24 items-center justify-center border border-hairline bg-background font-display text-2xl font-bold tracking-wider text-foreground transition-colors group-hover:border-signal group-hover:text-signal">
+              <div className="mt-8 flex h-28 w-28 items-center justify-center border border-hairline bg-surface font-display text-3xl text-foreground transition-colors group-hover:border-signal group-hover:text-signal">
                 {initials(m.name)}
               </div>
-              <div className="mt-5 font-display text-base font-semibold text-foreground">
-                {m.name}
-              </div>
-              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                {m.role}
+              <div className="mt-6">
+                <div className="font-serif italic text-2xl leading-tight text-foreground">
+                  {m.name}
+                </div>
+                <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                  {m.role}
+                </div>
               </div>
             </div>
           ))}
@@ -582,34 +676,38 @@ function Team() {
 
 function Roadmap() {
   return (
-    <section className="border-b border-hairline bg-surface">
-      <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <div className="eyebrow">05 // TRAJECTORY</div>
-        <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-          ASSOCIATION ROADMAP
+    <section className="relative border-t border-hairline bg-surface">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+        <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+          05 // TRAJECTORY
+        </div>
+        <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
+          Association
+          <br />
+          <span className="italic font-serif font-normal text-muted-foreground">roadmap.</span>
         </h2>
 
-        <div className="mt-14 relative">
-          <div className="absolute left-4 top-0 bottom-0 w-px bg-hairline md:left-1/2" aria-hidden />
-          <div className="space-y-10">
-            {ROADMAP.map((r, i) => (
-              <div key={r.tag} className="relative grid gap-4 pl-12 md:grid-cols-2 md:gap-16 md:pl-0">
-                <div
-                  className={`absolute left-[10px] top-2 h-3 w-3 border-2 border-signal bg-background md:left-1/2 md:-translate-x-1/2`}
-                  aria-hidden
-                />
-                <div className={i % 2 === 0 ? "md:text-right md:pr-16" : "md:col-start-2 md:pl-16"}>
-                  <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
-                    {r.tag} · {r.status}
-                  </div>
-                  <h3 className="mt-3 font-display text-2xl font-bold text-foreground">
-                    {r.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
-                </div>
+        <div className="mt-16 grid gap-0 border border-hairline bg-background md:grid-cols-3">
+          {ROADMAP.map((r, i) => (
+            <div
+              key={r.tag}
+              className={`relative p-8 md:p-10 ${
+                i < ROADMAP.length - 1 ? "border-b border-hairline md:border-b-0 md:border-r" : ""
+              }`}
+            >
+              <div className="font-display text-7xl text-hairline md:text-8xl">
+                0{i + 1}
               </div>
-            ))}
-          </div>
+              <div className="mt-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
+                <span className="text-signal">{r.tag}</span>
+                <span className="text-muted-foreground">{r.status}</span>
+              </div>
+              <h3 className="mt-5 font-display text-2xl leading-tight text-foreground md:text-3xl">
+                {r.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -618,20 +716,33 @@ function Roadmap() {
 
 function ClosingCTA() {
   return (
-    <section id="community" className="relative overflow-hidden border-b border-hairline">
-      <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-      <div className="relative mx-auto max-w-5xl px-5 py-24 text-center md:px-8 md:py-36">
-        <div className="eyebrow">06 // ENLIST</div>
-        <h2 className="mt-6 font-display text-4xl font-bold leading-[0.95] tracking-tight text-foreground md:text-7xl">
-          READY TO ENGINEER
+    <section id="community" className="relative overflow-hidden border-t border-hairline">
+      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in oklab, var(--color-signal) 22%, transparent) 0%, transparent 65%)",
+        }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-5xl px-5 py-28 text-center md:px-10 md:py-40">
+        <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+          06 // ENLIST
+        </div>
+        <h2 className="mt-8 font-display text-6xl leading-[0.85] tracking-tight text-foreground md:text-9xl">
+          Ready to
           <br />
-          THE <span className="text-signal">FUTURE?</span>
+          <span className="italic font-serif font-normal text-signal">engineer</span>
+          <br />
+          the future?
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
           Become part of a student community dedicated to learning, building, and innovating
           together. Bring the curiosity — we'll bring the tooling.
         </p>
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
+        <div className="mt-12 flex flex-wrap justify-center gap-4">
           <a href="#contact" className="btn-brutal btn-brutal-hover">
             → JOIN ARCHERS
           </a>
@@ -651,59 +762,54 @@ function Contact() {
     setSent(true);
   };
   return (
-    <section id="contact" className="border-b border-hairline">
-      <div className="mx-auto grid max-w-7xl gap-0 border-x border-hairline md:grid-cols-[1fr_1.2fr]">
-        <div className="border-b border-hairline bg-surface p-8 md:border-b-0 md:border-r md:p-14">
-          <div className="eyebrow">07 // TRANSMIT</div>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-            GET IN TOUCH
+    <section id="contact" className="border-t border-hairline">
+      <div className="mx-auto grid max-w-[1400px] gap-0 md:grid-cols-[1fr_1.2fr]">
+        <div className="border-b border-hairline bg-surface p-8 md:border-b-0 md:border-r md:p-16">
+          <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+            07 // TRANSMIT
+          </div>
+          <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-6xl">
+            Get in
+            <br />
+            <span className="italic font-serif font-normal text-muted-foreground">touch.</span>
           </h2>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
             Questions about workshops, events, or joining the community? Send a signal — the team
             reviews inbound messages weekly.
           </p>
-          <div className="mt-10 space-y-4 font-mono text-xs uppercase tracking-[0.2em]">
-            <div>
-              <div className="text-muted-foreground">CHANNEL</div>
-              <div className="mt-1 text-foreground">archers@gptcattingal.in</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">BASE</div>
-              <div className="mt-1 text-foreground">GPTC ATTINGAL · KERALA · IN</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">DIVISION</div>
-              <div className="mt-1 text-foreground">COMPUTER SCIENCE &amp; TECHNOLOGY</div>
-            </div>
+          <div className="mt-10 space-y-5 font-mono text-xs uppercase tracking-[0.2em]">
+            {[
+              ["CHANNEL", "archers@gptcattingal.in"],
+              ["BASE", "GPTC ATTINGAL · KERALA · IN"],
+              ["DIVISION", "COMPUTER SCIENCE & TECHNOLOGY"],
+            ].map(([k, v]) => (
+              <div key={k} className="border-l-2 border-signal pl-4">
+                <div className="text-muted-foreground">{k}</div>
+                <div className="mt-1 text-foreground">{v}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="p-8 md:p-14">
+        <form onSubmit={onSubmit} className="p-8 md:p-16">
           <div className="grid gap-6">
-            <label className="block">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
-                NAME
-              </span>
-              <input
-                type="text"
-                required
-                maxLength={80}
-                placeholder="Enter your name"
-                className="mt-2 block w-full border border-hairline bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
-              />
-            </label>
-            <label className="block">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
-                EMAIL ADDRESS
-              </span>
-              <input
-                type="email"
-                required
-                maxLength={120}
-                placeholder="yourname@example.com"
-                className="mt-2 block w-full border border-hairline bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
-              />
-            </label>
+            {[
+              { label: "NAME", type: "text", placeholder: "Enter your name", max: 80 },
+              { label: "EMAIL ADDRESS", type: "email", placeholder: "yourname@example.com", max: 120 },
+            ].map((f) => (
+              <label key={f.label} className="block">
+                <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
+                  {f.label}
+                </span>
+                <input
+                  type={f.type}
+                  required
+                  maxLength={f.max}
+                  placeholder={f.placeholder}
+                  className="mt-2 block w-full border-b border-hairline bg-transparent px-1 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
+                />
+              </label>
+            ))}
             <label className="block">
               <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
                 MESSAGE
@@ -713,10 +819,10 @@ function Contact() {
                 rows={5}
                 maxLength={1000}
                 placeholder="Enter your message"
-                className="mt-2 block w-full resize-none border border-hairline bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
+                className="mt-2 block w-full resize-none border-b border-hairline bg-transparent px-1 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
               />
             </label>
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
               <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                 {sent ? (
                   <span className="text-signal">✓ TRANSMISSION_QUEUED</span>
@@ -737,13 +843,20 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="bg-background">
-      <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
-        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+    <footer className="relative border-t border-hairline bg-background">
+      {/* Huge wordmark */}
+      <div className="mx-auto max-w-[1400px] px-5 pt-16 md:px-10 md:pt-24">
+        <div className="font-display text-[22vw] leading-[0.8] tracking-tighter text-foreground md:text-[16rem]">
+          ARCHERS<span className="text-signal">.</span>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1400px] px-5 pb-10 pt-10 md:px-10">
+        <div className="grid gap-10 border-t border-hairline pt-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
-              <Logo size={32} />
-              <div className="font-display text-xl font-bold tracking-[0.18em] text-foreground">
+              <LogoMark size={30} />
+              <div className="font-display text-lg tracking-[0.18em] text-foreground">
                 ARCHERS
               </div>
             </div>
@@ -753,59 +866,57 @@ function Footer() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {[
-              {
-                head: "NAVIGATE",
-                items: [
-                  ["Manifesto", "#about"],
-                  ["Workshops", "#workshops"],
-                  ["Events", "#events"],
-                  ["Team", "#team"],
-                ],
-              },
-              {
-                head: "COMMUNITY",
-                items: [
-                  ["Join", "#community"],
-                  ["Contact", "#contact"],
-                ],
-              },
-              {
-                head: "REFERENCES",
-                items: [
-                  ["Documentation", "#"],
-                  ["GitHub", "#"],
-                  ["Archive", "#"],
-                ],
-              },
-            ].map((col) => (
-              <div key={col.head}>
-                <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-signal">
-                  {col.head}
-                </div>
-                <ul className="mt-4 space-y-2">
-                  {col.items.map(([label, href]) => (
-                    <li key={label}>
-                      <a
-                        href={href}
-                        className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+          {[
+            {
+              head: "NAVIGATE",
+              items: [
+                ["Manifesto", "#about"],
+                ["Workshops", "#workshops"],
+                ["Events", "#events"],
+                ["Team", "#team"],
+              ],
+            },
+            {
+              head: "COMMUNITY",
+              items: [
+                ["Join", "#community"],
+                ["Contact", "#contact"],
+              ],
+            },
+            {
+              head: "REFERENCES",
+              items: [
+                ["Documentation", "#"],
+                ["GitHub", "#"],
+                ["Archive", "#"],
+              ],
+            },
+          ].map((col) => (
+            <div key={col.head}>
+              <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-signal">
+                {col.head}
               </div>
-            ))}
-          </div>
+              <ul className="mt-5 space-y-3">
+                {col.items.map(([label, href]) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {label} <span className="text-signal">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-hairline pt-6 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground md:flex-row md:items-center md:justify-between">
           <div>© 2026 ARCHERS TECHNICAL COMMAND · ALL RIGHTS RESERVED</div>
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
-            SYS.STATUS: NOMINAL
+            SYS.STATUS · NOMINAL
           </div>
         </div>
       </div>
@@ -818,8 +929,9 @@ function Index() {
     <main className="min-h-screen">
       <Nav />
       <Hero />
-      <TickerBar />
+      <TickerBand />
       <Manifesto />
+      <DisplayMarquee text="LEARN · BUILD · INNOVATE ·" />
       <Workshops />
       <PriorityEvent />
       <Team />
