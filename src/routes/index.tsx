@@ -351,27 +351,26 @@ function Nav() {
 
 function Hero() {
   const parallax = useParallax<HTMLImageElement>(0.15);
-  const tilt = useTilt<HTMLDivElement>(6);
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden [perspective:1400px]">
-      {/* Backdrop image with scroll parallax */}
+    <section id="top" className="relative min-h-screen overflow-hidden bg-background">
+      {/* Backdrop */}
       <img
         ref={parallax}
         src={heroBackdrop}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-multiply grayscale will-change-transform"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-multiply grayscale will-change-transform"
       />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.5]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 70%, transparent 0%, color-mix(in oklab, var(--color-background) 70%, transparent) 55%, var(--color-background) 92%)",
+            "radial-gradient(ellipse at 50% 60%, transparent 0%, color-mix(in oklab, var(--color-background) 55%, transparent) 55%, var(--color-background) 95%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-15" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-10" aria-hidden />
 
       {/* Top strip */}
       <div className="relative z-10 flex items-center justify-between gap-3 px-5 pt-24 md:px-10 md:pt-28 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.16em] md:tracking-[0.24em] text-muted-foreground">
@@ -383,66 +382,72 @@ function Hero() {
         <div className="shrink-0 text-foreground">'26</div>
       </div>
 
-      {/* Hero centerpiece */}
-      <div className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 pb-16 pt-16 text-center md:px-10 md:pt-24 md:pb-24">
-        {/* Bracket-framed logo — tilt on hover */}
-        <div ref={tilt} className="hero-frame p-6 md:p-10 transition-transform duration-200 will-change-transform [transform-style:preserve-3d]">
-          <div className="flex flex-col items-center gap-5">
-            <div className="relative">
-              <div
-                className="absolute inset-0 -z-10 blur-2xl"
-                style={{
-                  background:
-                    "radial-gradient(circle, color-mix(in oklab, var(--color-signal) 35%, transparent) 0%, transparent 70%)",
-                }}
-                aria-hidden
-              />
-              <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
-                <LogoMark size={72} invert={false} />
-                <span className="font-display text-5xl sm:text-6xl md:text-7xl tracking-tight text-foreground">rcherz</span>
-              </div>
-            </div>
-            <div className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.28em] md:tracking-[0.4em] text-muted-foreground" data-scramble>
-              [ ASSN. OF CS &amp; TECH · GPTC · EST. 2026 ]
-            </div>
+      {/* NUDOT-style split wordmark centerpiece */}
+      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-14 md:px-10 md:pt-24">
+        <div className="relative flex items-center justify-center">
+          <span
+            className="font-display text-stroke leading-[0.85] tracking-[-0.04em] text-[22vw] md:text-[18vw] select-none animate-hero-in"
+            style={{ animationDelay: "80ms" }}
+          >
+            ARCH
+          </span>
+
+          <div className="mx-3 md:mx-8 flex flex-col items-center gap-3 shrink-0 animate-hero-in" style={{ animationDelay: "260ms" }}>
+            <LogoMark size={54} />
+            <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.32em] text-muted-foreground whitespace-nowrap">
+              ( Association )
+            </span>
+          </div>
+
+          <span
+            className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[22vw] md:text-[18vw] select-none animate-hero-in"
+            style={{ animationDelay: "160ms" }}
+          >
+            ERZ
+          </span>
+        </div>
+
+        {/* Side rails */}
+        <div className="mt-6 grid grid-cols-2 gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:grid-cols-4">
+          <div className="space-y-1">
+            <div className="text-signal">STRATEGY</div>
+            <div className="text-foreground">Learn · Build</div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-signal">IDENTITY</div>
+            <div className="text-foreground">CS &amp; Tech</div>
+          </div>
+          <div className="space-y-1 md:text-right">
+            <div className="text-signal">CONTENT</div>
+            <div className="text-foreground">Workshops · Events</div>
+          </div>
+          <div className="space-y-1 md:text-right">
+            <div className="text-signal">PRACTICE</div>
+            <div className="text-foreground">Ship real projects</div>
           </div>
         </div>
 
+        {/* Sub-headline */}
+        <div className="mt-14 flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
+          <h1 className="max-w-3xl font-display text-[13vw] leading-[0.88] tracking-tight text-foreground md:text-[6.5rem]">
+            <span data-reveal="mask"><span>ENGINEER</span></span>
+            <br />
+            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future</span></span>
+          </h1>
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
+            The student association for Computer Science and Technology at Government
+            Polytechnic College, Attingal. Workshops, competitions, and side projects
+            run by students, for students.
+          </p>
+        </div>
 
-        <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
-          <span data-reveal="mask"><span>ENGINEER</span></span>
-          <br />
-          <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future</span></span>
-        </h1>
-
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-          The student association for Computer Science and Technology at Government
-          Polytechnic College, Attingal. Workshops, competitions, and side projects
-          run by students, for students.
-        </p>
-
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
           <a href="#community" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
             → JOIN ARCHERZ
           </a>
           <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
             SEE EVENTS
           </a>
-        </div>
-
-        <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-6 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          <div className="text-left">
-            <div className="text-signal">CHAPTER</div>
-            <div className="mt-1 text-foreground">GPTC ATTINGAL</div>
-          </div>
-          <div className="text-center">
-            <div className="text-signal">BRANCH</div>
-            <div className="mt-1 text-foreground">CS &amp; TECH</div>
-          </div>
-          <div className="text-right">
-            <div className="text-signal">STATUS</div>
-            <div className="mt-1 text-foreground">RECRUITING</div>
-          </div>
         </div>
       </div>
 
@@ -452,6 +457,7 @@ function Hero() {
     </section>
   );
 }
+
 
 function TickerBand() {
   return (
