@@ -323,9 +323,9 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
-            → REGISTER
-          </a>
+          <Link to="/auth" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
+            → LOGIN
+          </Link>
           <button
             aria-label="Toggle menu"
             className="btn-ghost md:hidden !px-3 !py-2"
