@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import archLogo from "@/assets/arch-logo.png.asset.json";
+import archLogo from "@/assets/arch-logo.png";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
-import miniMilitia from "@/assets/mini-militia.avif.asset.json";
+import miniMilitia from "@/assets/mini-militia.avif";
 import { supabase } from "@/integrations/supabase/client";
 
 
@@ -15,9 +15,9 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "canonical", href: "/" },
       // Preload nav emblem + hero art so the header never flickers on slow connections
-      { rel: "preload", as: "image", href: archLogo.url, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: archLogo, fetchpriority: "high" },
       { rel: "preload", as: "image", href: heroBackdrop, fetchpriority: "high" },
-      { rel: "preload", as: "image", href: miniMilitia.url },
+      { rel: "preload", as: "image", href: miniMilitia },
     ],
   }),
 });
@@ -345,7 +345,7 @@ function initials(name: string) {
 function LogoMark({ size = 28, invert = false }: { size?: number; invert?: boolean }) {
   return (
     <img
-      src={archLogo.url}
+      src={archLogo}
       alt="ARCHERZ emblem"
       width={size}
       height={size}
@@ -815,7 +815,7 @@ function PriorityEvent() {
     <section id="events" className="relative border-y border-hairline bg-background">
       {/* Blurred poster ambience */}
       <img
-        src={miniMilitia.url}
+        src={miniMilitia}
         alt=""
         aria-hidden
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 blur-2xl"
@@ -863,7 +863,7 @@ function PriorityEvent() {
             className="relative border border-hairline bg-surface transition-transform duration-200 will-change-transform [transform-style:preserve-3d]"
           >
             <img
-              src={miniMilitia.url}
+              src={miniMilitia}
               alt="Mini Militia tournament poster"
               className="block h-auto w-full object-cover"
               loading="lazy"
