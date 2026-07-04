@@ -314,7 +314,8 @@ function Nav() {
           <button
             aria-label="Toggle menu"
             className="btn-ghost md:hidden !px-3 !py-2"
-            onClick={() = data-cursor-hover> setOpen((v) => !v)}
+            data-cursor-hover
+            onClick={() => setOpen((v) => !v)}
           >
             <span className="block h-0.5 w-5 bg-current" />
           </button>
