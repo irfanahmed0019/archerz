@@ -903,7 +903,7 @@ function Contact() {
           </p>
           <div className="mt-10 space-y-5 font-mono text-xs uppercase tracking-[0.2em]">
             {[
-              ["CHANNEL", "archers@gptcattingal.in"],
+              ["CHANNEL", "archerz@gptcattingal.in"],
               ["BASE", "GPTC ATTINGAL · KERALA · IN"],
               ["DIVISION", "COMPUTER SCIENCE & TECHNOLOGY"],
             ].map(([k, v]) => (
