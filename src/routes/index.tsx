@@ -6,7 +6,7 @@ import bannerWorkshops from "@/assets/banner-workshops.jpg";
 import miniMilitia from "@/assets/mini-militia.avif.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 
-const REGISTER_URL = "https://forms.gle/KMNC6zrhtcqRcShaA";
+
 
 export const Route = createFileRoute("/")({
   component: Index,
