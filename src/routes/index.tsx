@@ -323,8 +323,8 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
-            → ENLIST
+          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
+            → REGISTER
           </a>
           <button
             aria-label="Toggle menu"
@@ -351,11 +351,13 @@ function Nav() {
               </a>
             ))}
             <a
-              href="#community"
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noreferrer"
               onClick={() => setOpen(false)}
               className="btn-brutal btn-brutal-hover mt-3 justify-center"
             >
-              → ENLIST
+              → REGISTER
             </a>
           </div>
         </div>
@@ -457,8 +459,8 @@ function Hero() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href="#community" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
-            → JOIN ARCHERZ
+          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
+            → REGISTER NOW
           </a>
           <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
             SEE EVENTS
