@@ -30,8 +30,10 @@ type Workshop = {
   register_url: string | null;
   ordering: number;
   is_published: boolean;
+  is_featured?: boolean;
   created_by: string | null;
 };
+
 
 function AdminPage() {
   const navigate = useNavigate();
