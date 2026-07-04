@@ -558,7 +558,39 @@ function Manifesto() {
   );
 }
 
+type LiveWorkshop = {
+  id: string;
+  slug: string;
+  code: string;
+  title: string;
+  body: string;
+  event_date: string | null;
+  status: string;
+};
+
 function Workshops() {
+  const [live, setLive] = useState<LiveWorkshop[] | null>(null);
+  useEffect(() => {
+    supabase
+      .from("workshops")
+      .select("id,slug,code,title,body,event_date,status,ordering,is_published")
+      .eq("is_published", true)
+      .order("ordering", { ascending: true })
+      .then(({ data }) => {
+        if (data) setLive(data as LiveWorkshop[]);
+      });
+  }, []);
+  const list: LiveWorkshop[] =
+    live ??
+    WORKSHOPS.map((w) => ({
+      id: w.id,
+      slug: w.id.toLowerCase().replace(/_/g, "-"),
+      code: w.id,
+      title: w.title,
+      body: w.body,
+      event_date: w.date,
+      status: w.status,
+    }));
   return (
     <section id="workshops" className="relative">
       {/* Cinematic banner */}
@@ -619,14 +651,15 @@ function Workshops() {
         </div>
 
         <div className="mt-12 border-t border-hairline">
-          {WORKSHOPS.map((w) => (
-            <a
+          {list.map((w) => (
+            <Link
               key={w.id}
-              href="#community"
+              to="/workshops/$slug"
+              params={{ slug: w.slug }}
               className="group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-hairline py-8 transition-colors hover:bg-surface md:grid-cols-[120px_1fr_120px_140px_auto] md:gap-8 md:py-10 md:px-6"
             >
               <div className="font-mono text-xs uppercase tracking-[0.24em] text-signal">
-                {w.id}
+                {w.code}
               </div>
               <div>
                 <div className="font-display text-2xl leading-tight text-foreground md:text-4xl">
@@ -638,7 +671,7 @@ function Workshops() {
               </div>
               <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 <div className="text-signal">DATE</div>
-                <div className="mt-1 text-foreground">{w.date}</div>
+                <div className="mt-1 text-foreground">{w.event_date ?? "TBD"}</div>
               </div>
               <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em]">
                 <span
@@ -654,7 +687,7 @@ function Workshops() {
               <div className="font-mono text-2xl text-signal transition-transform group-hover:translate-x-2">
                 ↗
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
