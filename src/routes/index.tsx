@@ -6,7 +6,7 @@ import bannerWorkshops from "@/assets/banner-workshops.jpg";
 import miniMilitia from "@/assets/mini-militia.avif.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 
-const REGISTER_URL = "https://forms.gle/KMNC6zrhtcqRcShaA";
+
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -323,9 +323,9 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
-            → REGISTER
-          </a>
+          <Link to="/auth" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
+            → LOGIN
+          </Link>
           <button
             aria-label="Toggle menu"
             className="btn-ghost md:hidden !px-3 !py-2"
@@ -350,15 +350,13 @@ function Nav() {
                 {l.label}
               </a>
             ))}
-            <a
-              href={REGISTER_URL}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to="/auth"
               onClick={() => setOpen(false)}
               className="btn-brutal btn-brutal-hover mt-3 justify-center"
             >
-              → REGISTER
-            </a>
+              → LOGIN
+            </Link>
           </div>
         </div>
       )}
@@ -459,12 +457,12 @@ function Hero() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
-            → REGISTER NOW
+          <a href="#events" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="EVENTS">
+            → SEE EVENTS
           </a>
-          <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
-            SEE EVENTS
-          </a>
+          <Link to="/auth" className="btn-ghost" data-cursor-hover data-cursor-text="LOGIN">
+            LOGIN
+          </Link>
         </div>
       </div>
 
