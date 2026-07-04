@@ -1,0 +1,13 @@
+REVOKE ALL ON public.profiles FROM anon;
+REVOKE ALL ON public.user_roles FROM anon;
+REVOKE ALL ON public.change_requests FROM anon;
+REVOKE INSERT, UPDATE, DELETE ON public.workshops FROM anon;
+GRANT SELECT ON public.workshops TO anon;
+GRANT SELECT, UPDATE ON public.profiles TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.user_roles TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workshops TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.change_requests TO authenticated;
+GRANT ALL ON public.profiles TO service_role;
+GRANT ALL ON public.user_roles TO service_role;
+GRANT ALL ON public.workshops TO service_role;
+GRANT ALL ON public.change_requests TO service_role;
