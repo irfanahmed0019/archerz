@@ -282,16 +282,14 @@ function Nav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
-        <a href="#top" className="flex items-center gap-3">
-          <LogoMark size={26} />
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-base tracking-[0.24em] text-foreground">
-              ARCHERS
-            </span>
-            <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline">
-              /GPTC · '26
-            </span>
-          </div>
+        <a href="#top" className="group flex items-baseline gap-1">
+          <LogoMark size={26} invert={true} />
+          <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
+            rchers
+          </span>
+          <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline pl-2">
+            /GPTC · '26
+          </span>
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
