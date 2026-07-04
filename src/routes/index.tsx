@@ -1027,21 +1027,3 @@ function Footer() {
   );
 }
 
-function Index() {
-  return (
-    <main className="min-h-screen">
-      <Nav />
-      <Hero />
-      <TickerBand />
-      <Manifesto />
-      <DisplayMarquee text="LEARN · BUILD · INNOVATE ·" />
-      <Workshops />
-      <PriorityEvent />
-      <Team />
-      <Roadmap />
-      <ClosingCTA />
-      <Contact />
-      <Footer />
-    </main>
-  );
-}
