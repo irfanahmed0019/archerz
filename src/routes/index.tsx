@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png.asset.json";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
 import miniMilitia from "@/assets/mini-militia.avif.asset.json";
+import { supabase } from "@/integrations/supabase/client";
+
+const REGISTER_URL = "https://forms.gle/KMNC6zrhtcqRcShaA";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -320,8 +323,8 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
-            → ENLIST
+          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
+            → REGISTER
           </a>
           <button
             aria-label="Toggle menu"
@@ -348,11 +351,13 @@ function Nav() {
               </a>
             ))}
             <a
-              href="#community"
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noreferrer"
               onClick={() => setOpen(false)}
               className="btn-brutal btn-brutal-hover mt-3 justify-center"
             >
-              → ENLIST
+              → REGISTER
             </a>
           </div>
         </div>
@@ -454,8 +459,8 @@ function Hero() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href="#community" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
-            → JOIN ARCHERZ
+          <a href={REGISTER_URL} target="_blank" rel="noreferrer" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
+            → REGISTER NOW
           </a>
           <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
             SEE EVENTS
@@ -553,7 +558,39 @@ function Manifesto() {
   );
 }
 
+type LiveWorkshop = {
+  id: string;
+  slug: string;
+  code: string;
+  title: string;
+  body: string;
+  event_date: string | null;
+  status: string;
+};
+
 function Workshops() {
+  const [live, setLive] = useState<LiveWorkshop[] | null>(null);
+  useEffect(() => {
+    supabase
+      .from("workshops")
+      .select("id,slug,code,title,body,event_date,status,ordering,is_published")
+      .eq("is_published", true)
+      .order("ordering", { ascending: true })
+      .then(({ data }) => {
+        if (data) setLive(data as LiveWorkshop[]);
+      });
+  }, []);
+  const list: LiveWorkshop[] =
+    live ??
+    WORKSHOPS.map((w) => ({
+      id: w.id,
+      slug: w.id.toLowerCase().replace(/_/g, "-"),
+      code: w.id,
+      title: w.title,
+      body: w.body,
+      event_date: w.date,
+      status: w.status,
+    }));
   return (
     <section id="workshops" className="relative">
       {/* Cinematic banner */}
@@ -614,14 +651,15 @@ function Workshops() {
         </div>
 
         <div className="mt-12 border-t border-hairline">
-          {WORKSHOPS.map((w) => (
-            <a
+          {list.map((w) => (
+            <Link
               key={w.id}
-              href="#community"
+              to="/workshops/$slug"
+              params={{ slug: w.slug }}
               className="group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-hairline py-8 transition-colors hover:bg-surface md:grid-cols-[120px_1fr_120px_140px_auto] md:gap-8 md:py-10 md:px-6"
             >
               <div className="font-mono text-xs uppercase tracking-[0.24em] text-signal">
-                {w.id}
+                {w.code}
               </div>
               <div>
                 <div className="font-display text-2xl leading-tight text-foreground md:text-4xl">
@@ -633,7 +671,7 @@ function Workshops() {
               </div>
               <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 <div className="text-signal">DATE</div>
-                <div className="mt-1 text-foreground">{w.date}</div>
+                <div className="mt-1 text-foreground">{w.event_date ?? "TBD"}</div>
               </div>
               <div className="hidden md:block font-mono text-xs uppercase tracking-[0.2em]">
                 <span
@@ -649,7 +687,7 @@ function Workshops() {
               <div className="font-mono text-2xl text-signal transition-transform group-hover:translate-x-2">
                 ↗
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -922,7 +960,6 @@ function Contact() {
           </p>
           <div className="mt-10 space-y-5 font-mono text-xs uppercase tracking-[0.2em]">
             {[
-              ["CHANNEL", "archerz@gptcattingal.in"],
               ["BASE", "GPTC ATTINGAL · KERALA · IN"],
               ["DIVISION", "COMPUTER SCIENCE & TECHNOLOGY"],
             ].map(([k, v]) => (
@@ -1031,7 +1068,7 @@ function Footer() {
               items: [
                 ["Documentation", "#"],
                 ["GitHub", "#"],
-                ["Archive", "#"],
+                ["Admin", "/auth"],
               ],
             },
           ].map((col) => (
