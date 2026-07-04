@@ -347,41 +347,43 @@ function Nav() {
 }
 
 function Hero() {
+  const parallax = useParallax<HTMLImageElement>(0.15);
+  const tilt = useTilt<HTMLDivElement>(6);
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden">
-      {/* Backdrop image */}
+    <section id="top" className="relative min-h-screen overflow-hidden [perspective:1400px]">
+      {/* Backdrop image with scroll parallax */}
       <img
+        ref={parallax}
         src={heroBackdrop}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 will-change-transform"
       />
-      {/* Overlays */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 85%)",
+            "radial-gradient(ellipse at 50% 65%, transparent 0%, color-mix(in oklab, var(--color-background) 60%, transparent) 45%, var(--color-background) 90%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 scanlines opacity-30" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 scanlines opacity-25" aria-hidden />
 
       {/* Top strip */}
       <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
         <div className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
-          LOCATION · GPTC ATTINGAL
+          GPTC ATTINGAL · KERALA
         </div>
-        <div className="hidden md:block">LAT 8.6982°N · LON 76.8156°E</div>
+        <div className="hidden md:block">CS &amp; TECHNOLOGY · CYCLE '26</div>
         <div className="text-foreground">'26</div>
       </div>
 
       {/* Hero centerpiece */}
       <div className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 pb-16 pt-16 text-center md:px-10 md:pt-24 md:pb-24">
-        {/* Bracket-framed logo + wordmark */}
-        <div className="hero-frame p-6 md:p-10">
+        {/* Bracket-framed logo — tilt on hover */}
+        <div ref={tilt} className="hero-frame p-6 md:p-10 transition-transform duration-200 will-change-transform [transform-style:preserve-3d]">
           <div className="flex flex-col items-center gap-5">
             <div className="relative">
               <div
@@ -392,15 +394,17 @@ function Hero() {
                 }}
                 aria-hidden
               />
-              <LogoMark size={110} />
+              <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
+                <LogoMark size={110} invert={true} />
+                <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
+              </div>
             </div>
             <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
-              [ ASSN. OF CS &amp; TECH · EST. 2026 ]
+              [ ASSN. OF CS &amp; TECH · GPTC · EST. 2026 ]
             </div>
           </div>
         </div>
 
-        {/* Massive display headline */}
         <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
           ENGINEER
           <br />
@@ -408,9 +412,9 @@ function Hero() {
         </h1>
 
         <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-          Association of Computer Science &amp; Technology Students at Government Polytechnic
-          College, Attingal. Building the next generation of developers, innovators, and
-          technology leaders.
+          The student association for Computer Science and Technology at Government
+          Polytechnic College, Attingal. Workshops, competitions, and side projects
+          run by students, for students.
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -418,30 +422,28 @@ function Hero() {
             → JOIN ARCHERS
           </a>
           <a href="#events" className="btn-ghost">
-            EXPLORE EVENTS
+            SEE EVENTS
           </a>
         </div>
 
-        {/* Trail metadata */}
         <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-6 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           <div className="text-left">
-            <div className="text-signal">SYS.STATUS</div>
-            <div className="mt-1 text-foreground">ONLINE</div>
+            <div className="text-signal">CHAPTER</div>
+            <div className="mt-1 text-foreground">GPTC ATTINGAL</div>
           </div>
           <div className="text-center">
-            <div className="text-signal">DIVISION</div>
+            <div className="text-signal">BRANCH</div>
             <div className="mt-1 text-foreground">CS &amp; TECH</div>
           </div>
           <div className="text-right">
-            <div className="text-signal">MODE</div>
+            <div className="text-signal">STATUS</div>
             <div className="mt-1 text-foreground">RECRUITING</div>
           </div>
         </div>
       </div>
 
-      {/* Scroll cue */}
       <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-        ↓ SCROLL_TO_INITIATE
+        ↓ SCROLL
       </div>
     </section>
   );
