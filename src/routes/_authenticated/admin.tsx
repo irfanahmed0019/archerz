@@ -278,6 +278,8 @@ function AdminPage() {
         {tab === "team" && (
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
+
+        {tab === "members" && isAdmin && <MembersPanel />}
       </div>
 
       {(editing || creating) && (
