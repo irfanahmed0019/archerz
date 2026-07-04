@@ -287,7 +287,7 @@ function Nav() {
         <a href="#top" className="group flex items-baseline gap-1">
           <LogoMark size={26} invert={false} />
           <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
-            rchers
+            rcherz
           </span>
           <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline pl-2">
             /GPTC · '26
