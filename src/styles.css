@@ -99,6 +99,12 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
+    /* Handmade paper grain — subtle SVG noise wash */
+    background-image:
+      radial-gradient(1200px 800px at 100% -10%, color-mix(in oklab, var(--color-signal) 8%, transparent), transparent 60%),
+      radial-gradient(900px 700px at -10% 110%, color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 55%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.09  0 0 0 0 0.14  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-attachment: fixed, fixed, fixed;
   }
   ::selection {
     background: var(--color-signal);
