@@ -85,7 +85,7 @@ function AdminPage() {
         requested_by: uid,
         kind: "workshop_update",
         target_id: w.id,
-        payload: w as unknown as Record<string, unknown>,
+        payload: JSON.parse(JSON.stringify(w)),
       });
       if (error) return alert(error.message);
       alert("Change submitted for admin review.");
@@ -360,14 +360,14 @@ function WorkshopEditor({
               </span>
               {key === "long_description" || key === "body" ? (
                 <textarea
-                  value={(f as Record<string, string>)[key] ?? ""}
+                  value={String((f as unknown as Record<string, unknown>)[key] ?? "")}
                   onChange={(e) => setF({ ...f, [key]: e.target.value })}
                   rows={key === "long_description" ? 4 : 2}
                   className="mt-2 block w-full border border-hairline bg-background px-3 py-2 text-sm"
                 />
               ) : (
                 <input
-                  value={(f as Record<string, string>)[key] ?? ""}
+                  value={String((f as unknown as Record<string, unknown>)[key] ?? "")}
                   onChange={(e) => setF({ ...f, [key]: e.target.value })}
                   className="mt-2 block w-full border border-hairline bg-background px-3 py-2 text-sm"
                 />
