@@ -308,13 +308,13 @@ function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex">
+          <a href="#community" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
             → ENLIST
           </a>
           <button
             aria-label="Toggle menu"
             className="btn-ghost md:hidden !px-3 !py-2"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() = data-cursor-hover> setOpen((v) => !v)}
           >
             <span className="block h-0.5 w-5 bg-current" />
           </button>
@@ -562,7 +562,7 @@ function Workshops() {
             <br />
             <span className="italic font-serif font-normal">your skills.</span>
           </h2>
-          <a href="#workshops-list" className="btn-brutal btn-brutal-hover mt-10">
+          <a href="#workshops-list" className="btn-brutal btn-brutal-hover mt-10" data-cursor-hover>
             ↗ ENTER THE ARENA
           </a>
         </div>
@@ -728,7 +728,7 @@ function PriorityEvent() {
                   </div>
                 ))}
               </div>
-              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center">
+              <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center" data-cursor-hover>
                 → REGISTER
               </a>
             </div>
@@ -866,10 +866,10 @@ function ClosingCTA() {
           together. Bring the curiosity — we'll bring the tooling.
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="btn-brutal btn-brutal-hover">
+          <a href="#contact" className="btn-brutal btn-brutal-hover" data-cursor-hover>
             → JOIN ARCHERS
           </a>
-          <a href="#about" className="btn-ghost">
+          <a href="#about" className="btn-ghost" data-cursor-hover>
             LEARN MORE
           </a>
         </div>
@@ -953,7 +953,7 @@ function Contact() {
                   "ENCRYPTED_ON_TRANSPORT"
                 )}
               </div>
-              <button type="submit" className="btn-brutal btn-brutal-hover">
+              <button type="submit" className="btn-brutal btn-brutal-hover" data-cursor-hover>
                 → CONTACT US
               </button>
             </div>
