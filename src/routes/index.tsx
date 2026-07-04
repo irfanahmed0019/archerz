@@ -374,13 +374,13 @@ function Hero() {
       <div className="pointer-events-none absolute inset-0 scanlines opacity-15" aria-hidden />
 
       {/* Top strip */}
-      <div className="relative z-10 flex items-center justify-between px-5 pt-24 md:px-10 md:pt-28 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 bg-signal animate-pulse" />
-          GPTC ATTINGAL · KERALA
+      <div className="relative z-10 flex items-center justify-between gap-3 px-5 pt-24 md:px-10 md:pt-28 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.16em] md:tracking-[0.24em] text-muted-foreground">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="inline-block h-2 w-2 shrink-0 bg-signal animate-pulse" />
+          <span className="truncate">GPTC ATTINGAL · KERALA</span>
         </div>
         <div className="hidden md:block">CS &amp; TECHNOLOGY · CYCLE '26</div>
-        <div className="text-foreground">'26</div>
+        <div className="shrink-0 text-foreground">'26</div>
       </div>
 
       {/* Hero centerpiece */}
@@ -398,15 +398,16 @@ function Hero() {
                 aria-hidden
               />
               <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
-                <LogoMark size={110} invert={false} />
-                <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rcherz</span>
+                <LogoMark size={72} invert={false} />
+                <span className="font-display text-5xl sm:text-6xl md:text-7xl tracking-tight text-foreground">rcherz</span>
               </div>
             </div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground" data-scramble>
+            <div className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.28em] md:tracking-[0.4em] text-muted-foreground" data-scramble>
               [ ASSN. OF CS &amp; TECH · GPTC · EST. 2026 ]
             </div>
           </div>
         </div>
+
 
         <h1 className="mt-10 max-w-5xl font-display text-[15vw] leading-[0.85] tracking-tight text-foreground md:text-[9.5rem]">
           <span data-reveal="mask"><span>ENGINEER</span></span>
