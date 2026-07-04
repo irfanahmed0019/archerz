@@ -636,71 +636,89 @@ function Workshops() {
 }
 
 function PriorityEvent() {
+  const tilt = useTilt<HTMLDivElement>(10);
   return (
-    <section id="events" className="relative">
-      <div className="relative overflow-hidden border-y border-hairline">
-        <img
-          src={bannerEvent}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover opacity-80"
-          loading="lazy"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 25%, transparent) 0%, transparent 40%, color-mix(in oklab, var(--color-background) 80%, transparent) 100%)",
-          }}
-          aria-hidden
-        />
+    <section id="events" className="relative border-y border-hairline bg-background">
+      {/* Blurred poster ambience */}
+      <img
+        src={miniMilitia.url}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 blur-2xl"
+        loading="lazy"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in oklab, var(--color-background) 55%, transparent) 0%, color-mix(in oklab, var(--color-background) 65%, transparent) 40%, var(--color-background) 100%)",
+        }}
+        aria-hidden
+      />
 
-        <div className="relative mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36">
-          {/* Top row */}
-          <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
-            <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
-            <div className="text-muted-foreground">
-              EVENT_TYPE: <span className="text-foreground">ESPORTS</span>
+      <div className="relative mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-36 [perspective:1400px]">
+        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.28em]">
+          <div className="text-signal">[ 03 // FLAGSHIP EVENT ]</div>
+          <div className="text-muted-foreground">
+            TYPE: <span className="text-foreground">ESPORTS</span>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <span className="sticker" style={{ transform: "rotate(-3deg)" }}>
+            ● LIVE '26
+          </span>
+          <span className="sticker" style={{ transform: "rotate(2deg)" }}>
+            OCT · 25
+          </span>
+          <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
+            10:00 → 16:00
+          </span>
+        </div>
+
+        <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
+          MINI
+          <br />
+          <span className="italic font-serif font-normal text-signal">militia.</span>
+        </h2>
+
+        <div className="mt-14 grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-start">
+          {/* Poster with 3D tilt */}
+          <div
+            ref={tilt}
+            className="relative border border-hairline bg-surface transition-transform duration-200 will-change-transform [transform-style:preserve-3d]"
+          >
+            <img
+              src={miniMilitia.url}
+              alt="Mini Militia tournament poster"
+              className="block h-auto w-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute left-0 top-0 sticker m-3" style={{ transform: "rotate(-4deg)" }}>
+              ARCHERS · PRESENTS
+            </div>
+            <div className="absolute right-0 bottom-0 sticker m-3" style={{ transform: "rotate(3deg)" }}>
+              32 SEATS
             </div>
           </div>
 
-          {/* Sticker date */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span className="sticker" style={{ transform: "rotate(-3deg)" }}>
-              ● LIVE '26
-            </span>
-            <span className="sticker" style={{ transform: "rotate(2deg)" }}>
-              OCT · 25
-            </span>
-            <span className="sticker" style={{ transform: "rotate(-1deg)" }}>
-              10:00 → 16:00
-            </span>
-          </div>
-
-          {/* Massive event type */}
-          <h2 className="mt-10 font-display text-[16vw] leading-[0.85] tracking-tighter text-foreground md:text-[13rem]">
-            MINI
-            <br />
-            <span className="italic font-serif font-normal text-signal">militia.</span>
-          </h2>
-
-          <div className="mt-10 grid gap-10 md:grid-cols-[1.3fr_1fr]">
+          <div className="flex flex-col gap-6">
             <p className="max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
-              Join the ultimate battle. Show off your skills in our multiplayer combat tournament —
-              solo grit, squad tactics, and a live scoreboard until one team stands. Only 32 seats.
+              Squad up. 4v4 mobile combat, live scoreboard, one lab, one afternoon.
+              Bring your own device. Winner takes the pot. Losers get pizza.
             </p>
 
             <div className="panel p-6">
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-signal">
-                EVENT_SPECIFICATIONS
+                EVENT SPECS
               </div>
               <div className="mt-4 divide-y divide-hairline">
                 {[
                   ["DATE", "OCT 25, 2026"],
                   ["TIME", "10:00 — 16:00"],
                   ["LOCATION", "COMPUTER LAB 01"],
-                  ["FORMAT", "SQUAD // 4v4"],
-                  ["SEATS", "32 OPERATORS"],
+                  ["FORMAT", "SQUAD · 4v4"],
+                  ["SEATS", "32 PLAYERS"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between py-2.5 font-mono text-[11px] uppercase tracking-[0.18em]">
                     <span className="text-muted-foreground">{k}</span>
@@ -709,7 +727,7 @@ function PriorityEvent() {
                 ))}
               </div>
               <a href="#community" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center">
-                → REGISTER NOW
+                → REGISTER
               </a>
             </div>
           </div>
