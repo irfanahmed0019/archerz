@@ -20,7 +20,7 @@ function NotFoundComponent() {
         <h1 className="mt-4 text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">SIGNAL LOST</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The route you requested does not exist in the ARCHERS network.
+          The route you requested does not exist in the ARCHERZ network.
         </p>
         <div className="mt-6">
           <Link to="/" className="btn-brutal btn-brutal-hover">
@@ -73,24 +73,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ARCHERS — Engineer the Future | CS & Tech Students, GPTC Attingal" },
+      { title: "ARCHERZ — Engineer the Future | CS & Tech Students, GPTC Attingal" },
       {
         name: "description",
         content:
-          "ARCHERS is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate.",
+          "ARCHERZ is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn. Build. Innovate.",
       },
-      { name: "author", content: "ARCHERS" },
+      { name: "author", content: "ARCHERZ" },
       { name: "theme-color", content: "#f4f1ea" },
-      { property: "og:title", content: "ARCHERS — Engineer the Future" },
+      { property: "og:title", content: "ARCHERZ — Engineer the Future" },
       {
         property: "og:description",
         content:
           "Association of Computer Science & Technology Students, GPTC Attingal. Workshops, events, and a community building the next generation of developers.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "ARCHERS" },
+      { property: "og:site_name", content: "ARCHERZ" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ARCHERS — Engineer the Future" },
+      { name: "twitter:title", content: "ARCHERZ — Engineer the Future" },
       {
         name: "twitter:description",
         content:
