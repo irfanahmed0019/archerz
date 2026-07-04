@@ -22,6 +22,8 @@ function Index() {
       history.replaceState(null, "", window.location.pathname + window.location.search);
     }
     window.scrollTo(0, 0);
+    // Boot the noart-style motion stack (Lenis + cursor + scramble + mask reveal)
+    import("@/lib/motion").then((m) => m.startMotion());
   }, []);
 
   return (
