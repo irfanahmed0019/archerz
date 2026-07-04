@@ -399,7 +399,7 @@ function Hero() {
               />
               <div className="flex items-baseline gap-2 [transform:translateZ(40px)]">
                 <LogoMark size={110} invert={false} />
-                <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rchers</span>
+                <span className="font-display text-6xl md:text-7xl tracking-tight text-foreground">rcherz</span>
               </div>
             </div>
             <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground" data-scramble>
