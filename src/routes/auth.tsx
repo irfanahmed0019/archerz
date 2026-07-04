@@ -8,6 +8,26 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const PENDING_MSG =
+  "Your login information has been sent to the admin. After review, your access will be approved.";
+
+async function gateAfterAuth(): Promise<{ allowed: boolean; message?: string }> {
+  const { data: u } = await supabase.auth.getUser();
+  if (!u.user) return { allowed: false };
+  const { data: rs } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
+  const roles = (rs ?? []).map((r) => r.role as string);
+  const isStaff = roles.some((r) => r === "admin" || r === "it_admin" || r === "coordinator");
+  if (isStaff) return { allowed: true };
+  // Not staff — file an access request (best-effort, ignore duplicates) and sign out.
+  await supabase.from("change_requests").insert({
+    requested_by: u.user.id,
+    kind: "access_request",
+    payload: { email: u.user.email, full_name: u.user.user_metadata?.full_name ?? null },
+  });
+  await supabase.auth.signOut();
+  return { allowed: false, message: PENDING_MSG };
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -19,9 +39,13 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/admin", replace: true });
-    });
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) return;
+      const gate = await gateAfterAuth();
+      if (gate.allowed) navigate({ to: "/admin", replace: true });
+      else if (gate.message) setStatus(gate.message);
+    })();
   }, [navigate]);
 
   async function onSubmit(e: FormEvent) {
@@ -45,12 +69,14 @@ function AuthPage() {
         });
         if (error) throw error;
         if (!data.session) {
-          setStatus("Thanks for being part of ARCHERZ. Check your email, then sign in to open your dashboard.");
+          setStatus(PENDING_MSG);
           setMode("signin");
           return;
         }
       }
-      navigate({ to: "/admin", replace: true });
+      const gate = await gateAfterAuth();
+      if (gate.allowed) navigate({ to: "/admin", replace: true });
+      else setStatus(gate.message ?? PENDING_MSG);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -64,9 +90,16 @@ function AuthPage() {
     const r = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
-    if (r.error) setErr(r.error instanceof Error ? r.error.message : String(r.error));
-    else if (!r.redirected) navigate({ to: "/admin", replace: true });
+    if (r.error) {
+      setErr(r.error instanceof Error ? r.error.message : String(r.error));
+      return;
+    }
+    if (r.redirected) return;
+    const gate = await gateAfterAuth();
+    if (gate.allowed) navigate({ to: "/admin", replace: true });
+    else setStatus(gate.message ?? PENDING_MSG);
   }
+
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-5 py-16">
