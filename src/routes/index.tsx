@@ -28,6 +28,7 @@ function Index() {
 
   return (
     <div className="relative bg-background text-foreground">
+      <PageTransition />
       <Nav />
       <main>
         <Hero />
@@ -44,6 +45,17 @@ function Index() {
     </div>
   );
 }
+
+function PageTransition() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[9998] flex items-center justify-center bg-foreground text-background animate-page-curtain">
+      <div className="font-mono text-[11px] uppercase tracking-[0.4em] animate-page-label">
+        ARCHERZ — LOADING SIGNAL
+      </div>
+    </div>
+  );
+}
+
 
 // --- 3D tilt: mouse-driven perspective for cards/banners ---
 function useTilt<T extends HTMLElement>(max = 8) {
