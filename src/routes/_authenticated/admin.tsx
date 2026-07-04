@@ -802,3 +802,87 @@ function MembersPanel() {
     </div>
   );
 }
+
+function TeamMembersPanel() {
+  const [rows, setRows] = useState<
+    Array<{ user_id: string; roles: Role[]; email: string | null; display_name: string | null }>
+  >([]);
+  const [q, setQ] = useState("");
+
+  async function load() {
+    const teamRoles: Role[] = ["admin", "it_admin", "coordinator"];
+    const { data: rs } = await supabase
+      .from("user_roles")
+      .select("user_id, role")
+      .in("role", teamRoles);
+    const grouped = new Map<string, Role[]>();
+    (rs ?? []).forEach((r) => {
+      const list = grouped.get(r.user_id) ?? [];
+      list.push(r.role as Role);
+      grouped.set(r.user_id, list);
+    });
+    const ids = Array.from(grouped.keys());
+    const { data: ps } = await supabase
+      .from("profiles")
+      .select("id, email, display_name")
+      .in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+    const pmap = new Map((ps ?? []).map((p) => [p.id, p]));
+    setRows(
+      ids.map((id) => ({
+        user_id: id,
+        roles: grouped.get(id) ?? [],
+        email: pmap.get(id)?.email ?? null,
+        display_name: pmap.get(id)?.display_name ?? null,
+      })),
+    );
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const filtered = rows.filter(
+    (r) =>
+      !q ||
+      (r.email ?? "").toLowerCase().includes(q.toLowerCase()) ||
+      (r.display_name ?? "").toLowerCase().includes(q.toLowerCase()),
+  );
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-display text-3xl tracking-tight md:text-5xl">
+          Team members <span className="text-signal">/ {rows.length}</span>
+        </h1>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="search email or name"
+          className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
+        />
+      </div>
+      <div className="border-t border-hairline">
+        <div className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+          <div>NAME</div>
+          <div>EMAIL</div>
+          <div>ROLES</div>
+        </div>
+        {filtered.map((r) => (
+          <div
+            key={r.user_id}
+            className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-3 font-mono text-xs"
+          >
+            <div className="text-foreground">{r.display_name ?? "—"}</div>
+            <div className="text-muted-foreground">{r.email ?? "—"}</div>
+            <div className="text-signal uppercase tracking-[0.24em]">{r.roles.join(" · ")}</div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <p className="py-6 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
+            [ NO TEAM MEMBERS ]
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
