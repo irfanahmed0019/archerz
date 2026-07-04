@@ -7,7 +7,13 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
-type Role = "admin" | "it_admin" | "coordinator";
+type Role = "admin" | "it_admin" | "coordinator" | "normal";
+type Profile = {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  created_at?: string | null;
+};
 type Workshop = {
   id: string;
   slug: string;
@@ -30,16 +36,19 @@ function AdminPage() {
   const [email, setEmail] = useState<string>("");
   const [uid, setUid] = useState<string>("");
   const [roles, setRoles] = useState<Role[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [requests, setRequests] = useState<
     Array<{ id: string; kind: string; payload: Record<string, unknown>; status: string; created_at: string }>
   >([]);
-  const [tab, setTab] = useState<"cards" | "requests" | "team" | "members">("cards");
+  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "team" | "members">("dashboard");
   const [editing, setEditing] = useState<Workshop | null>(null);
   const [creating, setCreating] = useState(false);
 
   const isAdmin = roles.includes("admin") || roles.includes("it_admin");
   const isCoord = roles.includes("coordinator");
+  const isStaff = isAdmin || isCoord;
+  const displayName = profile?.display_name || email.split("@")[0] || "Archer";
 
   useEffect(() => {
     (async () => {
@@ -47,8 +56,15 @@ function AdminPage() {
       if (!u.user) return;
       setEmail(u.user.email ?? "");
       setUid(u.user.id);
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("id, email, display_name, created_at")
+        .eq("id", u.user.id)
+        .maybeSingle();
+      setProfile((p ?? null) as Profile | null);
       const { data: rs } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
-      setRoles((rs ?? []).map((r) => r.role as Role));
+      const nextRoles = (rs ?? []).map((r) => r.role as Role);
+      setRoles(nextRoles.length ? nextRoles : ["normal"]);
       await refresh();
     })();
   }, []);
@@ -144,7 +160,7 @@ function AdminPage() {
       <header className="border-b border-hairline">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 md:px-10">
           <Link to="/" className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-            ← ARCHERZ / ADMIN
+            ← ARCHERZ / DASHBOARD
           </Link>
           <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.24em]">
             <span className="text-muted-foreground">{email}</span>
@@ -171,7 +187,7 @@ function AdminPage() {
         )}
 
         <div className="mb-8 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
-          {(["cards", "requests", "team", ...(isAdmin ? (["members"] as const) : [])] as const).map((t) => (
+          {(["dashboard", ...(isStaff ? (["cards", "requests", "team"] as const) : []), ...(isAdmin ? (["members"] as const) : [])] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -189,7 +205,18 @@ function AdminPage() {
           ))}
         </div>
 
-        {tab === "cards" && (
+        {tab === "dashboard" && (
+          <MemberDashboard
+            displayName={displayName}
+            email={email}
+            roles={roles}
+            workshops={workshops}
+            isStaff={isStaff}
+            onManage={() => setTab("cards")}
+          />
+        )}
+
+        {tab === "cards" && isStaff && (
           <div>
             <div className="mb-6 flex items-center justify-between">
               <h1 className="font-display text-3xl tracking-tight md:text-5xl">Event cards</h1>
@@ -237,7 +264,7 @@ function AdminPage() {
           </div>
         )}
 
-        {tab === "requests" && (
+        {tab === "requests" && isStaff && (
           <div>
             <h1 className="mb-6 font-display text-3xl tracking-tight md:text-5xl">
               Pending requests
@@ -275,7 +302,7 @@ function AdminPage() {
           </div>
         )}
 
-        {tab === "team" && (
+        {tab === "team" && isStaff && (
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
 
@@ -392,6 +419,151 @@ function WorkshopEditor({
   );
 }
 
+function MemberDashboard({
+  displayName,
+  email,
+  roles,
+  workshops,
+  isStaff,
+  onManage,
+}: {
+  displayName: string;
+  email: string;
+  roles: Role[];
+  workshops: Workshop[];
+  isStaff: boolean;
+  onManage: () => void;
+}) {
+  const nextEvent = workshops.find((w) => w.is_published && w.status.toLowerCase() !== "closed") ?? workshops[0];
+  const drafts = workshops.filter((w) => !w.is_published);
+  const plans = workshops.filter((w) => w.is_published);
+
+  return (
+    <div>
+      <section className="grid gap-8 border-b border-hairline pb-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+            [ MEMBER SIGNAL ACTIVE ]
+          </div>
+          <h1 className="mt-4 font-display text-4xl tracking-tight md:text-7xl">
+            Welcome, {displayName}.
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+            Thanks for being part of ARCHERZ. This is your own member dashboard for upcoming events, planning notes, and internal drafts.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+            {(roles.length ? roles : ["normal"]).map((role) => (
+              <span key={role} className="border border-hairline bg-surface px-3 py-2 text-signal">
+                {role.replace("_", " ")}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="border border-hairline bg-surface p-6">
+          <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            Signed in as
+          </div>
+          <div className="mt-2 break-all font-mono text-sm text-foreground">{email}</div>
+          <div className="mt-8 grid grid-cols-3 gap-3 text-center font-mono uppercase tracking-[0.18em]">
+            <Metric label="Events" value={String(plans.length)} />
+            <Metric label="Drafts" value={String(drafts.length)} />
+            <Metric label="Role" value={isStaff ? "Staff" : "Member"} />
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-6 py-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="border border-hairline bg-surface p-6">
+          <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-signal">
+            Next event
+          </div>
+          {nextEvent ? (
+            <>
+              <h2 className="mt-4 font-display text-3xl tracking-tight">{nextEvent.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{nextEvent.body}</p>
+              <div className="mt-5 grid gap-2 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                <span>{nextEvent.event_date ?? "Date queued"}</span>
+                <span>{nextEvent.duration ?? "Duration soon"}</span>
+                <span className="text-signal">{nextEvent.status}</span>
+              </div>
+              {nextEvent.register_url && (
+                <a href={nextEvent.register_url} className="mt-6 btn-brutal btn-brutal-hover">
+                  → REGISTER
+                </a>
+              )}
+            </>
+          ) : (
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
+              [ NEXT EVENT WILL APPEAR HERE ]
+            </p>
+          )}
+        </div>
+
+        <div className="grid gap-6">
+          <div className="border border-hairline bg-background p-6">
+            <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-signal">
+              Website planning
+            </div>
+            <div className="mt-5 grid gap-3">
+              {plans.slice(0, 4).map((w) => (
+                <PlanRow key={w.id} code={w.code} title={w.title} status={w.status} label="live" />
+              ))}
+              {plans.length === 0 && <EmptyLine text="No live planning items yet" />}
+            </div>
+          </div>
+
+          <div className="border border-hairline bg-background p-6">
+            <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-signal">
+              Internal drafts
+            </div>
+            <div className="mt-5 grid gap-3">
+              {drafts.slice(0, 4).map((w) => (
+                <PlanRow key={w.id} code={w.code} title={w.title} status={w.status} label="draft" />
+              ))}
+              {drafts.length === 0 && <EmptyLine text="No draft items in the queue" />}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {isStaff && (
+        <button onClick={onManage} className="btn-brutal btn-brutal-hover">
+          → OPEN MANAGEMENT TOOLS
+        </button>
+      )}
+    </div>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border border-hairline bg-background p-3">
+      <div className="text-lg text-foreground">{value}</div>
+      <div className="mt-1 text-[9px] text-muted-foreground">{label}</div>
+    </div>
+  );
+}
+
+function PlanRow({ code, title, status, label }: { code: string; title: string; status: string; label: string }) {
+  return (
+    <div className="grid grid-cols-[72px_1fr_auto] items-center gap-3 border-b border-hairline pb-3 font-mono text-xs last:border-b-0 last:pb-0">
+      <span className="text-signal">{code}</span>
+      <span className="text-foreground">{title}</span>
+      <span className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+        {label} · {status}
+      </span>
+    </div>
+  );
+}
+
+function EmptyLine({ text }: { text: string }) {
+  return (
+    <p className="font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
+      [ {text} ]
+    </p>
+  );
+}
+
 function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => void }) {
   const [list, setList] = useState<
     Array<{ user_id: string; role: Role; email: string | null; display_name: string | null }>
@@ -451,6 +623,7 @@ function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => 
             onChange={(e) => setRole(e.target.value as Role)}
             className="border border-hairline bg-background px-3 py-2 font-mono text-xs uppercase"
           >
+            <option value="normal">normal</option>
             <option value="coordinator">coordinator</option>
             <option value="admin">admin</option>
             <option value="it_admin">it_admin</option>
