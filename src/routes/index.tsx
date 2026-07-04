@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import archLogo from "@/assets/arch-logo.png.asset.json";
+import archLogo from "@/assets/arch-logo.png";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
-import miniMilitia from "@/assets/mini-militia.avif.asset.json";
+import miniMilitia from "@/assets/mini-militia.avif";
 import { supabase } from "@/integrations/supabase/client";
 
 
