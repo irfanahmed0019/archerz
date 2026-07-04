@@ -50,10 +50,116 @@ function Index() {
 }
 
 function PageTransition() {
+  const [pct, setPct] = useState(0);
+  const [gone, setGone] = useState(false);
+
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const DURATION = 1600;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / DURATION);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - t, 3);
+      setPct(Math.floor(eased * 100));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else setTimeout(() => setGone(true), 350);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  if (gone) return null;
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9998] flex items-center justify-center bg-foreground text-background animate-page-curtain">
-      <div className="font-mono text-[11px] uppercase tracking-[0.4em] animate-page-label">
-        ARCHERZ — LOADING SIGNAL
+    <div
+      className={`fixed inset-0 z-[9998] flex flex-col bg-foreground text-background overflow-hidden ${
+        pct >= 100 ? "animate-page-curtain pointer-events-none" : ""
+      }`}
+    >
+      {/* scanlines */}
+      <div className="absolute inset-0 scanlines opacity-40" />
+      {/* blueprint grid */}
+      <div
+        className="absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+      {/* vermillion sweep */}
+      <div
+        className="absolute inset-y-0 left-0 bg-signal/25 mix-blend-screen"
+        style={{ width: `${pct}%`, transition: "width 60ms linear" }}
+      />
+
+      {/* top bar */}
+      <div className="relative flex items-center justify-between px-6 py-4 font-mono text-[10px] uppercase tracking-[0.3em] border-b border-background/20">
+        <span>ARCHERZ // BOOT</span>
+        <span className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-signal animate-blink" />
+          SIGNAL ACQUIRED
+        </span>
+      </div>
+
+      {/* center */}
+      <div className="relative flex-1 flex items-center justify-center px-6">
+        <div className="w-full max-w-3xl">
+          <div className="font-mono text-[10px] uppercase tracking-[0.4em] text-signal">
+            /GPTC · ATTINGAL · '26
+          </div>
+          <div
+            className="mt-3 font-display uppercase leading-[0.9] tracking-tight"
+            style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
+          >
+            <span className="block">ARCH<span className="text-stroke-signal">ERZ</span></span>
+          </div>
+
+          {/* progress */}
+          <div className="mt-10">
+            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-background/70">
+              <span>LOADING SIGNAL</span>
+              <span className="tabular-nums">{String(pct).padStart(3, "0")}%</span>
+            </div>
+            <div className="mt-2 h-[3px] w-full bg-background/15 relative overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 bg-signal"
+                style={{ width: `${pct}%`, transition: "width 60ms linear" }}
+              />
+            </div>
+
+            {/* status stream */}
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-1 font-mono text-[10px] uppercase tracking-[0.2em] text-background/60">
+              {[
+                ["INIT", 10],
+                ["FONTS", 30],
+                ["MOTION", 55],
+                ["CURSOR", 70],
+                ["GRID", 82],
+                ["WORKSHOPS", 90],
+                ["TEAM", 96],
+                ["READY", 100],
+              ].map(([label, at]) => (
+                <div
+                  key={label as string}
+                  className={`flex items-center gap-2 transition-colors ${
+                    pct >= (at as number) ? "text-background" : "text-background/30"
+                  }`}
+                >
+                  <span>{pct >= (at as number) ? "▣" : "▢"}</span>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* bottom bar */}
+      <div className="relative flex items-center justify-between px-6 py-4 font-mono text-[10px] uppercase tracking-[0.3em] border-t border-background/20">
+        <span>CS · TECH · ASSOCIATION</span>
+        <span>V26.0</span>
       </div>
     </div>
   );
