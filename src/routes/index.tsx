@@ -983,11 +983,11 @@ function Team() {
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-0 border border-hairline sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-2 gap-0 border border-hairline lg:grid-cols-4">
           {TEAM.map((m, i) => (
             <div
               key={m.name}
-              className="group relative flex flex-col justify-between p-6 md:p-8 border-t border-l border-hairline first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 lg:[&:nth-child(-n+4)]:border-t-0 [&:nth-child(odd)]:border-l-0 sm:[&:nth-child(2n+1)]:border-l-0 lg:[&:nth-child(4n+1)]:border-l-0 lg:[&:nth-child(odd)]:border-l"
+              className="group relative flex flex-col justify-between p-6 md:p-8 border-t border-l border-hairline [&:nth-child(-n+2)]:border-t-0 lg:[&:nth-child(-n+4)]:border-t-0 [&:nth-child(odd)]:border-l-0 lg:[&:nth-child(4n+1)]:border-l-0 lg:[&:nth-child(odd)]:border-l"
             >
               <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
                 <span className="text-signal">#{String(i + 1).padStart(2, "0")}</span>
