@@ -906,7 +906,7 @@ function PriorityEvent() {
       <div className="bg-background">
         <Marquee
           size="lg"
-          speed="slow"
+          speed="normal"
           items={["REGISTER NOW", "MINI MILITIA '26", "SQUAD 4v4", "OCT 25", "ENTER THE ARENA"]}
         />
       </div>
