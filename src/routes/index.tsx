@@ -290,7 +290,7 @@ function Nav() {
             rcherz
           </span>
           <span className="hidden font-mono text-[10px] tracking-[0.24em] text-muted-foreground md:inline pl-2">
-            /GPTC · '26
+            {"\n"}
           </span>
         </a>
 
