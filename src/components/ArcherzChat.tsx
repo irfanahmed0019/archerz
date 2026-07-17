@@ -8,9 +8,9 @@ const STORAGE_KEY = "archerz-chat-v1";
 
 const SUGGESTIONS = [
   "What is ARCHERZ?",
-  "Who runs GPTC Attingal's CS association?",
-  "How do I join?",
-  "What events do you run?",
+  "Engane join cheyyam?",
+  "Ethokke events und?",
+  "GPTC Attingal CS association?",
 ];
 
 function loadMessages(): UIMessage[] {
