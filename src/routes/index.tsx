@@ -600,12 +600,13 @@ function Hero() {
           </span>
 
           <div className="mx-2 md:mx-8 flex flex-col items-center gap-2 md:gap-3 shrink-0 animate-hero-in" style={{ animationDelay: "260ms" }}>
-            <LogoMark size={38} className="md:hidden" />
-            <LogoMark size={54} className="hidden md:block" />
+            <div className="md:hidden"><LogoMark size={38} /></div>
+            <div className="hidden md:block"><LogoMark size={54} /></div>
             <span className="font-mono text-[8px] md:text-[10px] uppercase tracking-[0.32em] text-muted-foreground whitespace-nowrap">
               ( Association )
             </span>
           </div>
+
 
           <span
             className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[16vw] md:text-[18vw] select-none animate-hero-in"
