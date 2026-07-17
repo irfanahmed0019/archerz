@@ -132,28 +132,28 @@ function WorkshopPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground has-mobile-dock">
       {/* Nav */}
       <header className="border-b border-hairline">
-        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 md:px-10">
-          <Link to="/" className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 md:px-10 lg:px-14">
+          <Link to="/" className="tap-target font-mono text-[11px] uppercase tracking-[0.32em] text-signal transition-colors hover:text-foreground">
             ← ARCHERZ
           </Link>
-          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-            <Link to="/" hash="events" className="hover:text-foreground">EVENTS</Link>
-            <Link to="/" hash="team" className="hover:text-foreground">TEAM</Link>
-            <Link to="/" hash="contact" className="hover:text-foreground">CONTACT</Link>
+          <div className="hidden md:flex items-center gap-6 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+            <Link to="/" hash="events" className="link-quiet hover:text-foreground">EVENTS</Link>
+            <Link to="/" hash="team" className="link-quiet hover:text-foreground">TEAM</Link>
+            <Link to="/" hash="contact" className="link-quiet hover:text-foreground">CONTACT</Link>
           </div>
         </div>
       </header>
 
       {/* Title block */}
       <section className="relative overflow-hidden">
-        <div className="relative mx-auto max-w-[1400px] px-5 pt-16 pb-10 text-center md:px-10 md:pt-24">
+        <div className="relative mx-auto max-w-[1400px] px-5 pt-16 pb-10 text-center md:px-10 md:pt-24 lg:pt-32 lg:pb-14">
           <div className="font-mono text-[11px] uppercase tracking-[0.4em] text-signal">
             ARCHERZ · GPTC ATTINGAL PRESENTS
           </div>
-          <h1 className="mt-6 font-display text-[10vw] leading-[0.9] tracking-tight md:text-[6rem]">
+          <h1 className="mt-6 font-display text-[10vw] leading-[0.9] tracking-tight md:text-[6rem] lg:text-[7.5rem]">
             {w.title}
           </h1>
           <div className="mx-auto mt-6 h-[3px] w-24 bg-signal" />
@@ -161,10 +161,10 @@ function WorkshopPage() {
       </section>
 
       {/* Poster + info */}
-      <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10">
-        <div className="grid gap-8 md:grid-cols-2">
+      <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10 lg:px-14 lg:pb-32">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
           {/* Poster */}
-          <div className="relative">
+          <div className="relative card-lift">
             <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full bg-background/80 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.24em] backdrop-blur">
               <span className={`h-2 w-2 rounded-full ${w.status === "OPEN" ? "bg-signal" : "bg-muted-foreground"}`} />
               {w.status}

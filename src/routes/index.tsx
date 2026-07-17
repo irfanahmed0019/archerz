@@ -847,16 +847,16 @@ function Workshops() {
               key={w.id}
               to="/workshops/$slug"
               params={{ slug: w.slug }}
-              className="group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-hairline py-8 transition-colors hover:bg-surface md:grid-cols-[120px_1fr_120px_140px_auto] md:gap-8 md:py-10 md:px-6"
+              className="card-lift group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-hairline py-8 transition-colors hover:bg-surface md:grid-cols-[120px_1fr_120px_140px_auto] md:gap-10 md:py-12 md:px-8 lg:px-10 lg:py-14"
             >
               <div className="font-mono text-xs uppercase tracking-[0.24em] text-signal">
                 {w.code}
               </div>
-              <div>
-                <div className="font-display text-2xl leading-tight text-foreground md:text-4xl">
+              <div className="min-w-0">
+                <div className="font-display text-2xl leading-tight text-foreground md:text-4xl lg:text-[2.75rem]">
                   {w.title}
                 </div>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground md:mt-3 md:text-[15px]">
                   {w.body}
                 </p>
               </div>
