@@ -11,9 +11,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
-    meta: [{ property: "og:url", content: "/" }],
+    meta: [
+      { property: "og:url", content: "https://archerz.lovable.app/" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/254c9f37-8b8e-44f7-808a-a6064dfb0630/id-preview-9a632a29--f121f496-ded9-4590-a2e5-02383200aff0.lovable.app-1783186168226.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/254c9f37-8b8e-44f7-808a-a6064dfb0630/id-preview-9a632a29--f121f496-ded9-4590-a2e5-02383200aff0.lovable.app-1783186168226.png" },
+    ],
     links: [
-      { rel: "canonical", href: "/" },
+      { rel: "canonical", href: "https://archerz.lovable.app/" },
       // Preload nav emblem + hero art so the header never flickers on slow connections
       { rel: "preload", as: "image", href: archLogo, fetchpriority: "high" },
       { rel: "preload", as: "image", href: heroBackdrop, fetchpriority: "high" },
