@@ -593,26 +593,28 @@ function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-14 md:px-10 md:pt-24">
         <div className="relative flex items-center justify-center">
           <span
-            className="font-display text-stroke leading-[0.85] tracking-[-0.04em] text-[22vw] md:text-[18vw] select-none animate-hero-in"
+            className="font-display text-stroke leading-[0.85] tracking-[-0.04em] text-[16vw] md:text-[18vw] select-none animate-hero-in"
             style={{ animationDelay: "80ms" }}
           >
             ARCH
           </span>
 
-          <div className="mx-3 md:mx-8 flex flex-col items-center gap-3 shrink-0 animate-hero-in" style={{ animationDelay: "260ms" }}>
-            <LogoMark size={54} />
-            <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.32em] text-muted-foreground whitespace-nowrap">
+          <div className="mx-2 md:mx-8 flex flex-col items-center gap-2 md:gap-3 shrink-0 animate-hero-in" style={{ animationDelay: "260ms" }}>
+            <LogoMark size={38} className="md:hidden" />
+            <LogoMark size={54} className="hidden md:block" />
+            <span className="font-mono text-[8px] md:text-[10px] uppercase tracking-[0.32em] text-muted-foreground whitespace-nowrap">
               ( Association )
             </span>
           </div>
 
           <span
-            className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[22vw] md:text-[18vw] select-none animate-hero-in"
+            className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[16vw] md:text-[18vw] select-none animate-hero-in"
             style={{ animationDelay: "160ms" }}
           >
             ERZ
           </span>
         </div>
+
 
         {/* Side rails */}
         <div className="mt-6 grid grid-cols-2 gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:grid-cols-4">
