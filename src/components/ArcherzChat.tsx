@@ -2,14 +2,15 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "archerz-chat-v1";
 
 const SUGGESTIONS = [
   "What is ARCHERZ?",
-  "Who runs GPTC Attingal's CS association?",
-  "How do I join?",
-  "What events do you run?",
+  "Engane join cheyyam?",
+  "Ethokke events und?",
+  "GPTC Attingal CS association?",
 ];
 
 function loadMessages(): UIMessage[] {
@@ -34,6 +35,7 @@ function textOf(message: UIMessage): string {
 export function ArcherzChat() {
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   const [initial, setInitial] = useState<UIMessage[]>([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,19 @@ export function ArcherzChat() {
   useEffect(() => {
     setInitial(loadMessages());
     setHydrated(true);
+    let alive = true;
+    supabase
+      .from("app_settings")
+      .select("value")
+      .eq("key", "chatbot_enabled")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!alive) return;
+        if (data && (data.value === false || data.value === "false")) setEnabled(false);
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const { messages, sendMessage, status, setMessages, error } = useChat({
@@ -86,6 +101,8 @@ export function ArcherzChat() {
       // ignore
     }
   }
+
+  if (!enabled) return null;
 
   return (
     <>
@@ -183,7 +200,7 @@ export function ArcherzChat() {
 
             {error && (
               <div className="rounded border border-signal/40 bg-signal/5 p-3 font-mono text-[11px] uppercase tracking-[0.16em] text-signal">
-                Chat failed. Try again in a moment.
+                {error.message?.includes("Rate limit") ? error.message : error.message?.includes("disabled") ? "Chatbot is off right now — admins have paused it." : "Chat failed. Try again in a moment."}
               </div>
             )}
           </div>

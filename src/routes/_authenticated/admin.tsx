@@ -45,7 +45,7 @@ function AdminPage() {
   const [requests, setRequests] = useState<
     Array<{ id: string; kind: string; payload: Record<string, unknown>; status: string; created_at: string }>
   >([]);
-  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "team" | "members" | "users">("dashboard");
+  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "team" | "members" | "users" | "settings">("dashboard");
   const [editing, setEditing] = useState<Workshop | null>(null);
   const [creating, setCreating] = useState(false);
 
@@ -203,7 +203,7 @@ function AdminPage() {
         )}
 
         <div className="mb-8 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
-          {(["dashboard", ...(isStaff ? (["cards", "requests", "team"] as const) : []), ...(isAdmin ? (["members", "users"] as const) : [])] as const).map((t) => (
+          {(["dashboard", ...(isStaff ? (["cards", "requests", "team"] as const) : []), ...(isAdmin ? (["members", "users", "settings"] as const) : [])] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -344,6 +344,8 @@ function AdminPage() {
         {tab === "members" && isAdmin && <TeamMembersPanel />}
 
         {tab === "users" && isAdmin && <MembersPanel />}
+
+        {tab === "settings" && isAdmin && <SettingsPanel />}
       </div>
 
       {(editing || creating) && (
@@ -916,6 +918,74 @@ function TeamMembersPanel() {
           </p>
         )}
       </div>
+    </div>
+  );
+}
+
+function SettingsPanel() {
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase
+      .from("app_settings")
+      .select("value")
+      .eq("key", "chatbot_enabled")
+      .maybeSingle()
+      .then(({ data }) => {
+        setEnabled(!(data && (data.value === false || data.value === "false")));
+      });
+  }, []);
+
+  async function toggle() {
+    if (enabled === null) return;
+    const next = !enabled;
+    setSaving(true);
+    setErr(null);
+    const { error } = await supabase
+      .from("app_settings")
+      .upsert({ key: "chatbot_enabled", value: next as unknown as never, updated_at: new Date().toISOString() });
+    setSaving(false);
+    if (error) {
+      setErr(error.message);
+      return;
+    }
+    setEnabled(next);
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">[ SETTINGS ]</div>
+        <h2 className="mt-2 font-display text-3xl">Site controls</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Toggle features across the whole site.</p>
+      </div>
+
+      <div className="flex items-center justify-between border border-hairline bg-surface p-5">
+        <div>
+          <div className="font-display text-lg">ARCHERZ AI chatbot</div>
+          <p className="mt-1 max-w-md text-sm text-muted-foreground">
+            The floating AI bubble on every page. Turn off to hide it and block all requests.
+          </p>
+        </div>
+        <button
+          type="button"
+          disabled={enabled === null || saving}
+          onClick={toggle}
+          className={`min-w-[110px] border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.24em] ${
+            enabled ? "border-signal text-signal" : "border-hairline text-muted-foreground"
+          } disabled:opacity-50`}
+        >
+          {enabled === null ? "…" : enabled ? "ON — click to disable" : "OFF — click to enable"}
+        </button>
+      </div>
+
+      {err && (
+        <div className="border border-signal bg-signal/5 p-3 font-mono text-[11px] uppercase tracking-[0.16em] text-signal">
+          {err}
+        </div>
+      )}
     </div>
   );
 }
