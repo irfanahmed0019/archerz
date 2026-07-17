@@ -485,6 +485,78 @@ function Nav() {
   );
 }
 
+function MobileBottomNav() {
+  return (
+    <nav
+      aria-label="Primary mobile navigation"
+      className="mobile-dock md:hidden"
+    >
+      <ul className="mx-auto grid max-w-md grid-cols-4 items-stretch">
+        {[
+          { href: "#top", label: "Home", icon: "◈" },
+          { href: "#events", label: "Events", icon: "◆" },
+          { href: "#community", label: "Join", icon: "→", primary: true },
+          { href: "#menu-sheet", label: "Menu", icon: "≡", sheet: true },
+        ].map((item) => (
+          <li key={item.label} className="contents">
+            <a
+              href={item.href}
+              className={`tap-target flex flex-col items-center justify-center gap-1 py-3 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors ${
+                item.primary
+                  ? "text-signal"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              onClick={item.sheet ? (e) => {
+                e.preventDefault();
+                const el = document.getElementById("archerz-mobile-sheet");
+                if (el) el.dataset.open = el.dataset.open === "true" ? "false" : "true";
+              } : undefined}
+            >
+              <span aria-hidden className={`text-lg ${item.primary ? "" : ""}`}>{item.icon}</span>
+              <span>{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      {/* Slide-up sheet for the rest of the destinations */}
+      <div
+        id="archerz-mobile-sheet"
+        data-open="false"
+        className="pointer-events-none fixed inset-x-0 bottom-[72px] z-[59] translate-y-4 opacity-0 transition-all duration-300 data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
+      >
+        <div className="mx-3 mb-3 rounded-none border border-hairline bg-background p-4 shadow-[6px_6px_0_0_var(--color-foreground)]">
+          <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-signal mb-3">
+            [ MORE ]
+          </div>
+          <div className="grid gap-1">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => {
+                  const el = document.getElementById("archerz-mobile-sheet");
+                  if (el) el.dataset.open = "false";
+                }}
+                className="tap-target flex items-center justify-between border-b border-hairline py-3 font-mono text-xs uppercase tracking-[0.24em] text-foreground"
+              >
+                <span>{l.label}</span>
+                <span className="text-signal">↗</span>
+              </a>
+            ))}
+            <Link
+              to="/auth"
+              className="tap-target mt-3 flex items-center justify-center border border-foreground bg-foreground px-4 py-3 font-mono text-xs uppercase tracking-[0.24em] text-background"
+            >
+              → LOGIN
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 function Hero() {
   const parallax = useParallax<HTMLImageElement>(0.15);
   return (
