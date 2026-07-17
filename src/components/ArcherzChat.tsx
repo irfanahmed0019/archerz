@@ -200,7 +200,7 @@ export function ArcherzChat() {
 
             {error && (
               <div className="rounded border border-signal/40 bg-signal/5 p-3 font-mono text-[11px] uppercase tracking-[0.16em] text-signal">
-                Chat failed. Try again in a moment.
+                {error.message?.includes("Rate limit") ? error.message : error.message?.includes("disabled") ? "Chatbot is off right now — admins have paused it." : "Chat failed. Try again in a moment."}
               </div>
             )}
           </div>
