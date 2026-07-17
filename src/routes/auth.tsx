@@ -4,7 +4,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — ARCHERZ" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — ARCHERZ" },
+      {
+        name: "description",
+        content:
+          "Sign in to ARCHERZ — member, coordinator, and admin access for the Association of Computer Science & Technology Students at GPTC Attingal.",
+      },
+      { property: "og:title", content: "Sign in — ARCHERZ" },
+      {
+        property: "og:description",
+        content: "Member, coordinator, and admin access to the ARCHERZ dashboard.",
+      },
+      { property: "og:url", content: "https://archerz.lovable.app/auth" },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: "https://archerz.lovable.app/auth" }],
+  }),
   component: AuthPage,
 });
 
@@ -166,16 +183,21 @@ function Field({
   onChange: (v: string) => void;
   required?: boolean;
 }) {
+  const id = `field-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
-    <label className="block">
-      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">{label}</span>
+    <div className="block">
+      <label htmlFor={id} className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
+        {label}
+      </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
+        aria-label={label}
         className="mt-2 block w-full border-b border-hairline bg-transparent px-1 py-3 font-mono text-sm text-foreground focus:border-signal focus:outline-none"
       />
-    </label>
+    </div>
   );
 }

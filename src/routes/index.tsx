@@ -1085,7 +1085,7 @@ function ClosingCTA() {
             → JOIN ARCHERZ
           </a>
           <a href="#about" className="btn-ghost" data-cursor-hover>
-            LEARN MORE
+            LEARN MORE ABOUT ARCHERZ
           </a>
         </div>
       </div>
@@ -1131,34 +1131,40 @@ function Contact() {
         <form onSubmit={onSubmit} className="p-8 md:p-16">
           <div className="grid gap-6">
             {[
-              { label: "NAME", type: "text", placeholder: "Enter your name", max: 80 },
-              { label: "EMAIL ADDRESS", type: "email", placeholder: "yourname@example.com", max: 120 },
+              { label: "NAME", id: "contact-name", type: "text", placeholder: "Enter your name", max: 80 },
+              { label: "EMAIL ADDRESS", id: "contact-email", type: "email", placeholder: "yourname@example.com", max: 120 },
             ].map((f) => (
-              <label key={f.label} className="block">
-                <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
+              <div key={f.label} className="block">
+                <label htmlFor={f.id} className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
                   {f.label}
-                </span>
+                </label>
                 <input
+                  id={f.id}
+                  name={f.id}
                   type={f.type}
                   required
                   maxLength={f.max}
                   placeholder={f.placeholder}
+                  aria-label={f.label}
                   className="mt-2 block w-full border-b border-hairline bg-transparent px-1 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
                 />
-              </label>
+              </div>
             ))}
-            <label className="block">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
+            <div className="block">
+              <label htmlFor="contact-message" className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
                 MESSAGE
-              </span>
+              </label>
               <textarea
+                id="contact-message"
+                name="contact-message"
                 required
                 rows={5}
                 maxLength={1000}
                 placeholder="Enter your message"
+                aria-label="Message"
                 className="mt-2 block w-full resize-none border-b border-hairline bg-transparent px-1 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-signal focus:outline-none"
               />
-            </label>
+            </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
               <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                 {sent ? (
