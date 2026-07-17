@@ -17,12 +17,27 @@ type Workshop = {
 };
 
 export const Route = createFileRoute("/workshops/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — ARCHERZ` },
-      { name: "description", content: "Workshop detail — ARCHERZ, GPTC Attingal." },
-    ],
-  }),
+  head: ({ params }) => {
+    const title = params.slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    const pageTitle = `${title} — ARCHERZ Workshop`;
+    const description = `${title} is a workshop hosted by ARCHERZ, the Association of Computer Science & Technology Students at GPTC Attingal. Learn hands-on, build a project, and join the community.`;
+    const url = `https://archerz.lovable.app/workshops/${params.slug}`;
+    return {
+      meta: [
+        { title: pageTitle },
+        { name: "description", content: description },
+        { property: "og:title", content: pageTitle },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:title", content: pageTitle },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: WorkshopPage,
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground">

@@ -1,0 +1,11 @@
+# ARCHERZ
+
+> Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Workshops, events, and a student community building the next generation of developers.
+
+## Pages
+
+- [Home](/): Overview of ARCHERZ — manifesto, workshops, flagship events, team, and roadmap.
+- [Workshops](/#workshops): Current workshop tracks offered by the association.
+- [Events](/#events): Flagship events including the Mini Militia tournament.
+- [Team](/#team): The core team behind ARCHERZ.
+- [Contact](/#contact): Get in touch with the ARCHERZ team.
