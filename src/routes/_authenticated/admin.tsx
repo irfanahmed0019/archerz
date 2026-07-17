@@ -344,6 +344,8 @@ function AdminPage() {
         {tab === "members" && isAdmin && <TeamMembersPanel />}
 
         {tab === "users" && isAdmin && <MembersPanel />}
+
+        {tab === "settings" && isAdmin && <SettingsPanel />}
       </div>
 
       {(editing || creating) && (
