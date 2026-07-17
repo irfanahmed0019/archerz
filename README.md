@@ -1,45 +1,102 @@
+<div align="center">
+
 # ARCHERZ
 
-> Engineer the Future.
+### Engineer the Future.
 
-ARCHERZ is the official website for the Computer Science & Technology Students' Association of Government Polytechnic College, Attingal. It serves as the central platform for workshops, technical events, competitions, community updates, and student engagement.
+Official website of the **Computer Science & Technology Students' Association**  
+**Government Polytechnic College, Attingal**
 
-🌐 **Live Demo:** https://archerz.vercel.app
+<p>
+  <a href="https://archerz.vercel.app">
+    <img src="https://img.shields.io/badge/Live-Demo-ff2d20?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/irfanahmed0019/archerz">
+    <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" />
+  </a>
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript" />
+</p>
 
----
-
-## ✨ Features
-
-- Modern editorial-inspired UI/UX
-- Fully responsive desktop and mobile layouts
-- Interactive landing page
-- Workshop showcase
-- Event management interface
-- Flagship event section
-- Team showcase
-- Association roadmap
-- Contact form
-- Smooth animations and transitions
-- Premium typography and visual hierarchy
+</div>
 
 ---
 
-## 🖥️ Pages & Sections
+## 📖 About
 
-- Hero Landing Section
-- About ARCHERZ
-- Association Pillars
-- Technical Workshops
-- Featured Event
-- Team Members
-- Roadmap
-- Join Community CTA
-- Contact Section
-- Footer
+ARCHERZ is the official digital platform for the **Computer Science & Technology Students' Association** of Government Polytechnic College, Attingal.
+
+The website is designed with a modern editorial-inspired interface that highlights workshops, technical events, competitions, community activities, and student engagement while maintaining a premium visual experience across desktop and mobile devices.
 
 ---
 
-## 🛠 Tech Stack
+# 📸 Project Preview
+
+## 🏠 Landing Page
+
+<p align="center">
+  <img src="./screenshots/hero.png" alt="Hero Section" width="100%">
+</p>
+
+---
+
+## 🛠 Technical Workshops
+
+<p align="center">
+  <img src="./screenshots/workshops.png" alt="Workshop Section" width="100%">
+</p>
+
+---
+
+## 🎮 Featured Event
+
+<p align="center">
+  <img src="./screenshots/events.png" alt="Mini Militia Event" width="100%">
+</p>
+
+---
+
+## 👥 Team Section
+
+<p align="center">
+  <img src="./screenshots/team.png" alt="Team Section" width="100%">
+</p>
+
+---
+
+## 🗺 Association Roadmap
+
+<p align="center">
+  <img src="./screenshots/roadmap.png" alt="Roadmap" width="100%">
+</p>
+
+---
+
+## 📬 Contact & Footer
+
+<p align="center">
+  <img src="./screenshots/Contact & Footer.png" alt="Contact and Footer" width="100%">
+</p>
+
+---
+
+# ✨ Features
+
+- 🎨 Editorial-inspired premium UI
+- 📱 Fully responsive desktop and mobile design
+- ⚡ Fast performance with Vite
+- 🎭 Smooth animations and transitions
+- 🛠 Technical workshop showcase
+- 🎮 Event showcase and registration layout
+- 👥 Team presentation
+- 🗺 Association roadmap
+- 📬 Contact form
+- 📖 Modern typography and grid layouts
+- ♿ Accessible and responsive interface
+
+---
+
+# 🛠 Tech Stack
 
 ### Frontend
 
@@ -48,7 +105,7 @@ ARCHERZ is the official website for the Computer Science & Technology Students' 
 - Vite
 - TanStack Router
 - Tailwind CSS
-- Shadcn/UI
+- shadcn/ui
 - Framer Motion
 
 ### Backend
@@ -61,58 +118,60 @@ ARCHERZ is the official website for the Computer Science & Technology Students' 
 
 ---
 
-## 📁 Project Structure
+# 📂 Project Structure
 
-```
-src/
- ├── components/
- ├── routes/
- ├── pages/
- ├── hooks/
- ├── lib/
- ├── assets/
- ├── styles/
- └── utils/
-
-public/
-supabase/
+```text
+archerz
+├── public
+├── screenshots
+├── src
+│   ├── assets
+│   ├── components
+│   ├── hooks
+│   ├── lib
+│   ├── routes
+│   ├── styles
+│   └── utils
+├── supabase
+├── package.json
+└── vite.config.ts
 ```
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Getting Started
 
-Clone the repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/irfanahmed0019/archerz.git
 ```
 
-Go into the project
+### Navigate to the project
 
 ```bash
 cd archerz
 ```
 
-Install dependencies
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-Run the development server
+### Start development server
 
 ```bash
 npm run dev
 ```
 
-Build for production
+### Build for production
 
 ```bash
 npm run build
 ```
 
-Preview production build
+### Preview production build
 
 ```bash
 npm run preview
@@ -120,9 +179,9 @@ npm run preview
 
 ---
 
-## ⚙ Environment Variables
+# ⚙ Environment Variables
 
-Create a `.env` file in the root directory.
+Create a `.env` file in the project root.
 
 ```env
 VITE_SUPABASE_URL=your_supabase_url
@@ -131,71 +190,74 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ---
 
-## 🎨 Design Philosophy
+# 🎨 Design Philosophy
 
-ARCHERZ follows a minimal editorial design language inspired by modern creative studios.
+The design focuses on simplicity, readability, and visual impact.
 
-Design principles include:
+Core principles include:
 
-- Large bold typography
-- High whitespace usage
+- Large editorial typography
+- Minimal color palette
+- Strong whitespace
 - Grid-based layouts
-- Monochrome palette with red accent
-- Motion-first interactions
-- Mobile-first responsiveness
+- Motion-driven interactions
+- Responsive-first design
 - Premium user experience
+- Accessibility-focused interface
 
 ---
 
-## 📱 Responsive Design
+# 📱 Responsive Design
 
 Optimized for:
 
-- Mobile
-- Tablet
-- Laptop
-- Desktop
-- Ultra-wide Displays
+- 📱 Mobile
+- 📱 Tablets
+- 💻 Laptops
+- 🖥 Desktop
+- 🖥 Large Displays
 
 ---
 
-## 📌 Current Features
+# 📌 Current Features
 
-- Hero section
+- Landing page
+- About section
 - Workshop listings
-- Event showcase
-- Team cards
+- Featured event page
+- Team showcase
 - Roadmap timeline
 - Contact form
 - Responsive navigation
-- Mobile optimized layouts
+- Mobile-first layouts
 - Smooth scrolling
-- Modern animations
+- Interactive animations
 
 ---
 
-## 🔮 Future Improvements
+# 🔮 Future Improvements
 
-- Authentication
+- User Authentication
 - Admin Dashboard
 - Event Registration System
 - Workshop Management
 - Member Portal
-- Gallery
 - Blog
+- Gallery
 - Certificates
-- Notifications
+- Push Notifications
 - Dark Mode
 - CMS Integration
 
 ---
 
-## 🤝 Contributing
+# 🤝 Contributing
 
 Contributions are welcome.
 
 1. Fork the repository
-2. Create your feature branch
+
+2. Create a feature branch
 
 ```bash
 git checkout -b feature/new-feature
@@ -207,7 +269,7 @@ git checkout -b feature/new-feature
 git commit -m "Add new feature"
 ```
 
-4. Push to GitHub
+4. Push the branch
 
 ```bash
 git push origin feature/new-feature
@@ -217,34 +279,44 @@ git push origin feature/new-feature
 
 ---
 
-## 📄 License
+# 📄 License
 
-This project is developed for the Computer Science & Technology Students' Association of Government Polytechnic College, Attingal.
-
----
-
-## 👨‍💻 Author
-
-**Irfan Ahammad J**
-
-GitHub: https://github.com/irfanahmed0019
+This project was developed for the **Computer Science & Technology Students' Association** of **Government Polytechnic College, Attingal**.
 
 ---
 
-## ❤️ Acknowledgements
+# 👨‍💻 Author
+
+### Irfan Ahammad J
+
+- GitHub: https://github.com/irfanahmed0019
+- Portfolio: *(Add your portfolio URL here)*
+- LinkedIn: *(Add your LinkedIn URL here)*
+
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to the amazing open-source community.
 
 - React
+- TypeScript
 - Vite
 - Tailwind CSS
-- Shadcn/UI
-- Supabase
-- Vercel
+- shadcn/ui
 - TanStack Router
 - Framer Motion
+- Supabase
+- Vercel
 
 ---
 
-<p align="center">
-  <strong>ARCHERZ • Learn • Build • Innovate</strong><br/>
-  Engineer the Future.
-</p>
+<div align="center">
+
+## ⭐ If you like this project, consider giving it a star.
+
+### ARCHERZ • Learn • Build • Innovate
+
+**Engineer the Future.**
+
+</div>
