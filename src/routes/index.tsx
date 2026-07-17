@@ -40,7 +40,7 @@ function Index() {
   }, []);
 
   return (
-    <div className="relative bg-background text-foreground">
+    <div className="relative bg-background text-foreground has-mobile-dock">
       <PageTransition />
       <Nav />
       <main>
@@ -55,6 +55,7 @@ function Index() {
         <Contact />
       </main>
       <Footer />
+      <MobileBottomNav />
     </div>
   );
 }
