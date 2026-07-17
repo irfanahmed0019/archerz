@@ -102,6 +102,8 @@ export function ArcherzChat() {
     }
   }
 
+  if (!enabled) return null;
+
   return (
     <>
       {/* Floating bubble */}
