@@ -981,11 +981,181 @@ function SettingsPanel() {
         </button>
       </div>
 
+      <VercelDeployHelper />
+
       {err && (
         <div className="border border-signal bg-signal/5 p-3 font-mono text-[11px] uppercase tracking-[0.16em] text-signal">
           {err}
         </div>
       )}
+    </div>
+  );
+}
+
+function VercelDeployHelper() {
+  const [copied, setCopied] = useState<string | null>(null);
+  const [step, setStep] = useState(0);
+
+  const secretName = "LOVABLE_API_KEY";
+  const lovableSecrets =
+    "https://lovable.dev/projects/f121f496-ded9-4590-a2e5-02383200aff0?view=more&subview=cloud&section=secrets";
+  const vercelEnv = "https://vercel.com/dashboard"; // Vercel doesn't expose stable per-project deep links
+  const vercelDocs = "https://vercel.com/docs/projects/environment-variables";
+
+  async function copy(text: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+      setTimeout(() => setCopied((c) => (c === label ? null : c)), 1500);
+    } catch {
+      // noop
+    }
+  }
+
+  const steps: { title: string; body: React.ReactNode }[] = [
+    {
+      title: "Rotate & copy the key",
+      body: (
+        <>
+          <p>
+            The current <code className="font-mono">LOVABLE_API_KEY</code> value is hidden and can
+            never be revealed. Rotate to mint a new one — it's shown{" "}
+            <span className="text-signal">once</span>, so copy it right away.
+          </p>
+          <a
+            href={lovableSecrets}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-brutal btn-brutal-hover mt-3 inline-flex"
+          >
+            → OPEN LOVABLE SECRETS
+          </a>
+          <p className="mt-3 text-xs text-muted-foreground">
+            The old key keeps working for ~1 hour so nothing breaks mid-swap.
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Paste it into Vercel",
+      body: (
+        <>
+          <p>
+            Open your Vercel project → <b>Settings</b> → <b>Environment Variables</b>. Add a new
+            variable with this exact name for <b>Production</b>, <b>Preview</b>, and{" "}
+            <b>Development</b>:
+          </p>
+          <div className="mt-3 flex items-center gap-2 border border-hairline bg-background px-3 py-2 font-mono text-sm">
+            <span className="flex-1">{secretName}</span>
+            <button
+              type="button"
+              onClick={() => copy(secretName, "name")}
+              className="border border-hairline px-2 py-1 text-[10px] uppercase tracking-[0.2em] hover:bg-surface"
+            >
+              {copied === "name" ? "COPIED" : "COPY"}
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Paste the value you copied from Lovable. Save.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={vercelEnv}
+              target="_blank"
+              rel="noreferrer"
+              className="border border-hairline px-3 py-2 font-mono text-[11px] uppercase tracking-[0.24em] hover:bg-surface"
+            >
+              → OPEN VERCEL DASHBOARD
+            </a>
+            <a
+              href={vercelDocs}
+              target="_blank"
+              rel="noreferrer"
+              className="border border-hairline px-3 py-2 font-mono text-[11px] uppercase tracking-[0.24em] hover:bg-surface"
+            >
+              DOCS
+            </a>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Redeploy",
+      body: (
+        <>
+          <p>
+            In Vercel, go to <b>Deployments</b> → latest deployment → <b>⋯</b> → <b>Redeploy</b>.
+            Uncheck <i>"use existing build cache"</i> so the new env var is picked up.
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            After the deploy finishes, open your Vercel URL, click the AI bubble, and send a test
+            message.
+          </p>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <div className="border border-hairline bg-surface p-5">
+      <div className="flex items-baseline justify-between gap-4">
+        <div>
+          <div className="font-display text-lg">Deploy LOVABLE_API_KEY to Vercel</div>
+          <p className="mt-1 max-w-md text-sm text-muted-foreground">
+            3-step helper. Rotate in Lovable, paste in Vercel, redeploy.
+          </p>
+        </div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          {step + 1} / {steps.length}
+        </div>
+      </div>
+
+      <div className="mt-4 flex gap-1">
+        {steps.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setStep(i)}
+            className={`h-1 flex-1 ${i <= step ? "bg-signal" : "bg-hairline"}`}
+            aria-label={`Go to step ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      <div className="mt-5 space-y-3 text-sm">
+        <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-signal">
+          Step {step + 1}. {steps[step].title}
+        </div>
+        <div className="space-y-2 text-foreground">{steps[step].body}</div>
+      </div>
+
+      <div className="mt-6 flex items-center justify-between">
+        <button
+          type="button"
+          disabled={step === 0}
+          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          className="border border-hairline px-3 py-2 font-mono text-[11px] uppercase tracking-[0.24em] hover:bg-surface disabled:opacity-40"
+        >
+          ← Back
+        </button>
+        {step < steps.length - 1 ? (
+          <button
+            type="button"
+            onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
+            className="btn-brutal btn-brutal-hover"
+          >
+            Next →
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setStep(0)}
+            className="border border-signal px-3 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-signal hover:bg-signal/5"
+          >
+            Restart
+          </button>
+        )}
+      </div>
     </div>
   );
 }
