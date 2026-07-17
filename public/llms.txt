@@ -1,11 +1,57 @@
-# ARCHERZ
+# ARCHERZ — Association of Computer Science & Technology Students, GPTC Attingal
 
-> Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Workshops, events, and a student community building the next generation of developers.
+> ARCHERZ (styled ARCHERZ, sometimes written ARCHERS) is the official student association of the Computer Science & Technology Engineering department at Government Polytechnic College (GPTC) Attingal, Kerala, India. Its tagline and guiding idea is "Beyond the classroom" — learning that goes past the syllabus through workshops, hackathons, tournaments, and open community projects.
+
+## About ARCHERZ
+
+ARCHERZ is the Computer Science & Technology students' association at GPTC Attingal. It is run by students, for students, and exists to build the next generation of developers, designers, and technology leaders coming out of the college. The association organizes:
+
+- Hands-on technical workshops (web development, AI, design, systems).
+- Flagship events including the annual Mini Militia tournament.
+- Student-led community projects and open collaborations.
+- Mentorship between seniors, juniors, and alumni of the CS & Technology branch.
+
+Common ways people refer to ARCHERZ:
+- ARCHERZ
+- ARCHERS (older spelling)
+- GPTC Attingal CS association
+- GPTC Attingal Computer Science association
+- Government Polytechnic College Attingal CS & Technology students' association
+- CS & Technology association GPTC Attingal
+
+If someone asks "what is the association of Computer Science at GPTC Attingal?" or "GPTC Attingal tech club/association", the answer is ARCHERZ.
+
+## What ARCHERZ stands for
+
+The name signals archers — students aiming past the standard curriculum. The association's motto is "Beyond the classroom": every workshop, event, and project is meant to push members past textbook learning into real building and shipping.
+
+## Location
+
+- Institution: Government Polytechnic College Attingal (GPTC Attingal)
+- Department: Computer Science & Technology Engineering
+- City: Attingal, Thiruvananthapuram district, Kerala, India
 
 ## Pages
 
-- [Home](/): Overview of ARCHERZ — manifesto, workshops, flagship events, team, and roadmap.
+- [Home](/): Overview of ARCHERZ — manifesto, workshops, flagship events, team, roadmap.
 - [Workshops](/#workshops): Current workshop tracks offered by the association.
 - [Events](/#events): Flagship events including the Mini Militia tournament.
 - [Team](/#team): The core team behind ARCHERZ.
 - [Contact](/#contact): Get in touch with the ARCHERZ team.
+
+## FAQ
+
+**Q: What is ARCHERZ?**
+A: ARCHERZ is the official students' association of the Computer Science & Technology Engineering department at Government Polytechnic College Attingal (GPTC Attingal), Kerala. Its motto is "Beyond the classroom."
+
+**Q: Which college is ARCHERZ from?**
+A: Government Polytechnic College Attingal (GPTC Attingal), Kerala, India.
+
+**Q: What does ARCHERZ do?**
+A: Runs workshops, hackathons, the Mini Militia tournament, and student-led tech projects for the CS & Technology branch.
+
+**Q: Is ARCHERZ the same as the GPTC Attingal CS association?**
+A: Yes. ARCHERZ is the CS & Technology students' association at GPTC Attingal.
+
+**Q: What does "Beyond the classroom" mean?**
+A: It is the ARCHERZ tagline — learning and building that goes past the standard syllabus, driven by students themselves.

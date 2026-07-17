@@ -81,21 +81,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "ARCHERZ is the Association of Computer Science & Technology Students at Government Polytechnic College Attingal. Learn, build, and innovate with workshops, events, and a student community.",
       },
       { name: "author", content: "ARCHERZ" },
+      {
+        name: "keywords",
+        content:
+          "ARCHERZ, ARCHERS, GPTC Attingal, GPTC Attingal association, GPTC Attingal CS association, Government Polytechnic College Attingal, Computer Science association, CS & Technology, student association Kerala, beyond the classroom, Mini Militia GPTC",
+      },
       { name: "theme-color", content: "#f4f1ea" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "ARCHERZ" },
-      { property: "og:title", content: "ARCHERZ — CS & Tech Students, GPTC Attingal" },
+      { property: "og:title", content: "ARCHERZ — CS & Tech Students Association, GPTC Attingal" },
       {
         property: "og:description",
         content:
-          "Association of Computer Science & Technology Students, GPTC Attingal. Workshops, events, and a community building the next generation of developers.",
+          "ARCHERZ is the Computer Science & Technology students' association at Government Polytechnic College Attingal. Beyond the classroom — workshops, events, and student-built projects.",
       },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ARCHERZ — CS & Tech Students, GPTC Attingal" },
+      { name: "twitter:title", content: "ARCHERZ — CS & Tech Students Association, GPTC Attingal" },
       {
         name: "twitter:description",
         content:
-          "Association of Computer Science & Technology Students, GPTC Attingal. Workshops, events, and a student community.",
+          "The official CS & Technology students' association at GPTC Attingal. Beyond the classroom — workshops, hackathons, community.",
       },
     ],
     links: [
@@ -115,13 +120,73 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "ARCHERZ",
-          alternateName: "Association of Computer Science & Technology Students",
+          alternateName: [
+            "ARCHERS",
+            "Association of Computer Science & Technology Students",
+            "GPTC Attingal CS Association",
+            "GPTC Attingal Computer Science Association",
+          ],
+          description:
+            "ARCHERZ is the official students' association of the Computer Science & Technology Engineering department at Government Polytechnic College Attingal (GPTC Attingal), Kerala. Motto: Beyond the classroom.",
+          slogan: "Beyond the classroom",
           url: "https://archerz.lovable.app",
           logo: "https://archerz.lovable.app/favicon.png",
+          foundingDate: "2026",
+          areaServed: "Attingal, Kerala, India",
+          keywords:
+            "ARCHERZ, GPTC Attingal, Computer Science association, CS & Technology, student association, Kerala",
           parentOrganization: {
             "@type": "CollegeOrUniversity",
             name: "Government Polytechnic College Attingal",
+            alternateName: "GPTC Attingal",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Attingal",
+              addressRegion: "Kerala",
+              addressCountry: "IN",
+            },
           },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "What is ARCHERZ?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "ARCHERZ is the official students' association of the Computer Science & Technology Engineering department at Government Polytechnic College Attingal (GPTC Attingal), Kerala. Its motto is 'Beyond the classroom.'",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Which college does ARCHERZ belong to?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Government Polytechnic College Attingal (GPTC Attingal), Kerala, India — specifically the Computer Science & Technology Engineering department.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Is ARCHERZ the same as the GPTC Attingal CS association?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. ARCHERZ is the Computer Science & Technology students' association at GPTC Attingal.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What does ARCHERZ do?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "ARCHERZ runs technical workshops, hackathons, the annual Mini Militia tournament, and student-led community projects for the CS & Technology branch at GPTC Attingal.",
+              },
+            },
+          ],
         }),
       },
     ],
