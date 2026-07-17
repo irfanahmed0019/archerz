@@ -30,4 +30,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-*.env
+# Environment
+.env
+.env.*
+
+# Lovable
+.lovable/
+
+# Optional (if it contains secrets)
+supabase/.temp/
