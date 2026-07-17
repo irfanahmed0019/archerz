@@ -35,6 +35,7 @@ function textOf(message: UIMessage): string {
 export function ArcherzChat() {
   const [open, setOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   const [initial, setInitial] = useState<UIMessage[]>([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -43,6 +44,19 @@ export function ArcherzChat() {
   useEffect(() => {
     setInitial(loadMessages());
     setHydrated(true);
+    let alive = true;
+    supabase
+      .from("app_settings")
+      .select("value")
+      .eq("key", "chatbot_enabled")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!alive) return;
+        if (data && (data.value === false || data.value === "false")) setEnabled(false);
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const { messages, sendMessage, status, setMessages, error } = useChat({
