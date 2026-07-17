@@ -419,8 +419,8 @@ function Nav() {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10">
-        <a href="#top" className="group flex items-baseline gap-1">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3.5 md:px-10 lg:px-14 xl:px-16">
+        <a href="#top" className="group flex items-baseline gap-1 tap-target">
           <LogoMark size={26} invert={false} />
           <span className="font-display text-base tracking-[0.24em] text-foreground translate-y-[2px]">
             rcherz
@@ -430,15 +430,14 @@ function Nav() {
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-10 md:flex">
           {NAV_LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="group relative font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground"
+              className="link-quiet font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground hover:text-foreground"
             >
               {l.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-signal transition-all group-hover:w-full" />
             </a>
           ))}
         </nav>
@@ -449,7 +448,7 @@ function Nav() {
           </Link>
           <button
             aria-label="Toggle menu"
-            className="btn-ghost md:hidden !px-3 !py-2"
+            className="btn-ghost md:hidden tap-target !px-3 !py-2"
             data-cursor-hover
             onClick={() => setOpen((v) => !v)}
           >
