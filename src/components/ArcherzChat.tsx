@@ -1,4 +1,6 @@
 import { useChat } from "@ai-sdk/react";
+import { Bot, X } from "lucide-react";
+
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -113,9 +115,8 @@ export function ArcherzChat() {
         aria-label={open ? "Close ARCHERZ AI" : "Ask ARCHERZ AI"}
         className="fixed bottom-5 right-5 z-[70] flex h-14 w-14 items-center justify-center rounded-full bg-signal text-background shadow-[6px_6px_0_0_hsl(var(--foreground))] transition-transform hover:-translate-y-0.5 md:bottom-8 md:right-8"
       >
-        <span className="font-display text-lg leading-none">
-          {open ? "×" : "AI"}
-        </span>
+        {open ? <X className="h-6 w-6" strokeWidth={2.5} /> : <Bot className="h-7 w-7" strokeWidth={2} />}
+
       </button>
 
       {/* Panel */}
