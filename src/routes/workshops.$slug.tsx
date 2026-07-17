@@ -249,6 +249,41 @@ function WorkshopPage() {
           </Link>
         </div>
       </section>
+
+      {/* Mobile bottom register dock */}
+      <nav
+        aria-label="Workshop actions"
+        className="mobile-dock md:hidden"
+      >
+        <div className="mx-auto flex max-w-md items-stretch gap-2 px-3 py-2.5">
+          <Link
+            to="/"
+            className="tap-target flex flex-col items-center justify-center border border-hairline px-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            ← BACK
+          </Link>
+          <button
+            onClick={share}
+            className="tap-target flex flex-col items-center justify-center border border-hairline px-3 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground"
+          >
+            ⤴ SHARE
+          </button>
+          {w.register_url ? (
+            <a
+              href={w.register_url}
+              target="_blank"
+              rel="noreferrer"
+              className="tap-target flex flex-1 items-center justify-center bg-signal px-4 font-mono text-[11px] uppercase tracking-[0.22em] text-background"
+            >
+              → REGISTER
+            </a>
+          ) : (
+            <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              CLOSED
+            </span>
+          )}
+        </div>
+      </nav>
     </div>
   );
 }
