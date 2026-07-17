@@ -3,7 +3,15 @@ import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
+function safeNext(v: unknown): string {
+  if (typeof v !== "string") return "";
+  // Only same-origin relative paths: must start with '/', not '//' or '/\'.
+  if (!v.startsWith("/") || v.startsWith("//") || v.startsWith("/\\")) return "";
+  return v;
+}
+
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s.next) }),
   head: () => ({
     meta: [
       { title: "Sign in — ARCHERZ" },
@@ -47,6 +55,7 @@ async function gateAfterAuth(): Promise<{ allowed: boolean; message?: string }> 
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,15 +64,25 @@ function AuthPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  function goNext() {
+    if (next) {
+      // Use full navigation for arbitrary paths (e.g. /.lovable/oauth/consent?...).
+      window.location.replace(next);
+    } else {
+      navigate({ to: "/admin", replace: true });
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getUser();
       if (!data.user) return;
       const gate = await gateAfterAuth();
-      if (gate.allowed) navigate({ to: "/admin", replace: true });
+      if (gate.allowed) goNext();
       else if (gate.message) setStatus(gate.message);
     })();
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, next]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -76,12 +95,15 @@ function AuthPage() {
         if (error) throw error;
       } else {
         if (!name.trim()) throw new Error("Please enter your name.");
+        const emailRedirectTo = next
+          ? `${window.location.origin}${next}`
+          : window.location.origin;
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { full_name: name.trim() },
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo,
           },
         });
         if (error) throw error;
@@ -92,7 +114,7 @@ function AuthPage() {
         }
       }
       const gate = await gateAfterAuth();
-      if (gate.allowed) navigate({ to: "/admin", replace: true });
+      if (gate.allowed) goNext();
       else setStatus(gate.message ?? PENDING_MSG);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
@@ -104,16 +126,17 @@ function AuthPage() {
   async function google() {
     setErr(null);
     setStatus(null);
-    const r = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
+    const redirect_uri = next
+      ? `${window.location.origin}/auth?next=${encodeURIComponent(next)}`
+      : window.location.origin;
+    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri });
     if (r.error) {
       setErr(r.error instanceof Error ? r.error.message : String(r.error));
       return;
     }
     if (r.redirected) return;
     const gate = await gateAfterAuth();
-    if (gate.allowed) navigate({ to: "/admin", replace: true });
+    if (gate.allowed) goNext();
     else setStatus(gate.message ?? PENDING_MSG);
   }
 
