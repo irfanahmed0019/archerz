@@ -47,10 +47,11 @@ function Index() {
         <Hero />
         <TickerBand />
         <Manifesto />
-        <Workshops />
+        <WhyJoin />
         <PriorityEvent />
-        <Team />
+        <Workshops />
         <Roadmap />
+        <Team />
         <ClosingCTA />
         <Contact />
       </main>
@@ -59,6 +60,7 @@ function Index() {
     </div>
   );
 }
+
 
 function PageTransition() {
   const [pct, setPct] = useState(0);
