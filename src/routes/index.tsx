@@ -798,7 +798,7 @@ function Workshops() {
         />
         <div className="relative mx-auto flex max-w-[1400px] flex-col items-center justify-center px-5 py-28 text-center md:px-10 md:py-40">
           <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-            [ 02 // TRAINING INTERFACE ACTIVE ]
+            [ 04 // TRAINING INTERFACE ACTIVE ]
           </div>
           <h2 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-foreground md:text-[9rem]">
             UPGRADE
@@ -1094,7 +1094,7 @@ function Team() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              04 // OPERATORS
+              06 // OPERATORS
             </div>
             <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
               Meet the
@@ -1191,7 +1191,7 @@ function ClosingCTA() {
 
       <div className="relative mx-auto max-w-5xl px-5 py-28 text-center md:px-10 md:py-40">
         <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-          06 // ENLIST
+          07 // ENLIST
         </div>
         <h2 className="mt-8 font-display text-6xl leading-[0.85] tracking-tight text-foreground md:text-9xl">
           Ready to
@@ -1228,7 +1228,7 @@ function Contact() {
       <div className="mx-auto grid max-w-[1400px] gap-0 md:grid-cols-[1fr_1.2fr]">
         <div className="border-b border-hairline bg-surface p-8 md:border-b-0 md:border-r md:p-16">
           <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-            07 // TRANSMIT
+            08 // TRANSMIT
           </div>
           <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-6xl">
             Get in
