@@ -74,6 +74,53 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          branch: string | null
+          created_at: string
+          email: string
+          event_title: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          status: string
+          workshop_id: string | null
+        }
+        Insert: {
+          branch?: string | null
+          created_at?: string
+          email: string
+          event_title: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          workshop_id?: string | null
+        }
+        Update: {
+          branch?: string | null
+          created_at?: string
+          email?: string
+          event_title?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          workshop_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_workshop_id_fkey"
+            columns: ["workshop_id"]
+            isOneToOne: false
+            referencedRelation: "workshops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
