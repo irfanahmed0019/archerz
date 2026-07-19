@@ -44,14 +44,22 @@ function Index() {
       <PageTransition />
       <Nav />
       <main>
+        {/* 1. HERO — one-line message + primary CTA */}
         <Hero />
         <TickerBand />
+        {/* 2. WHAT WE DO — answers "what is this?" */}
         <Manifesto />
+        {/* 3. WHAT'S IN IT FOR YOU — answers "why should I care?" */}
         <WhyJoin />
+        {/* 4. WHAT'S NEXT — the featured event, the reason to act now */}
         <PriorityEvent />
+        {/* 5. PROOF — shipped/upcoming workshops */}
         <Workshops />
-        <Roadmap />
+        {/* 6. THE PEOPLE — trust through faces */}
         <Team />
+        {/* 7. TRAJECTORY — trust through track record */}
+        <Roadmap />
+        {/* 8. NEXT STEP — clear single action */}
         <ClosingCTA />
         <Contact />
       </main>
@@ -665,15 +673,14 @@ function Hero() {
           </span>
         </div>
 
-        {/* One-line value + CTAs */}
+        {/* One-line value + CTAs — clear hero message, primary + secondary action */}
         <div className="mt-12 md:mt-16 grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-end">
           <h1 className="font-display text-4xl leading-[0.95] tracking-tight text-foreground md:text-6xl">
-            <span data-reveal="mask"><span>Engineer</span></span>{" "}
-            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future.</span></span>
+            <span data-reveal="mask"><span>The CS &amp; Tech students'</span></span>{" "}
+            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">association at GPTC Attingal.</span></span>
           </h1>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground md:text-base md:justify-self-end md:text-right">
-            A student-led Computer Science &amp; Technology association at GPTC Attingal —
-            workshops, projects, and events that go beyond the classroom.
+            Workshops, projects, and events — built by students, for students. Beyond the classroom.
           </p>
         </div>
 
@@ -682,7 +689,7 @@ function Hero() {
             → JOIN ARCHERZ
           </Link>
           <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
-            EXPLORE EVENTS
+            SEE WHAT'S ON
           </a>
           <span className="hidden md:inline font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground pl-2">
             EST. 2026 · GPTC ATTINGAL
@@ -735,7 +742,7 @@ function Manifesto() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              01 // THE IDENTITY
+              01 // WHAT WE DO
             </div>
             <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-7xl">
               Not just an
@@ -746,8 +753,8 @@ function Manifesto() {
             </h2>
           </div>
           <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Move beyond textbooks and start creating. From workshops to real-world projects,
-            ARCHERZ is where students learn, build, and grow together.
+            We run workshops, ship real projects, and put on events for the CS &amp; Tech branch
+            at GPTC Attingal. Everything student-led.
           </div>
         </div>
 
@@ -1354,7 +1361,7 @@ function Team() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              06 // OPERATORS
+              06 // THE PEOPLE
             </div>
             <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
               Meet the
@@ -1401,12 +1408,12 @@ function Roadmap() {
     <section className="relative border-t border-hairline bg-surface">
       <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
         <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-          05 // TRAJECTORY
+          07 // TRAJECTORY
         </div>
         <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
-          Association
+          Where this
           <br />
-          <span className="italic font-serif font-normal text-muted-foreground">roadmap.</span>
+          <span className="italic font-serif font-normal text-muted-foreground">is going.</span>
         </h2>
 
         <div className="mt-16 grid gap-0 border border-hairline bg-background md:grid-cols-3">
