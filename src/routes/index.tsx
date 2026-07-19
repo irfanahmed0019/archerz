@@ -1361,7 +1361,7 @@ function Team() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              06 // THE PEOPLE
+              05 // THE PEOPLE
             </div>
             <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
               Meet the
@@ -1408,7 +1408,7 @@ function Roadmap() {
     <section className="relative border-t border-hairline bg-surface">
       <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
         <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-          07 // TRAJECTORY
+          06 // TRAJECTORY
         </div>
         <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
           Where this
