@@ -992,13 +992,17 @@ function PriorityEvent() {
     (async () => {
       const { data } = await supabase
         .from("workshops")
-        .select("title,image_url,event_date,duration,body,long_description,register_url,status")
+        .select("id,title,image_url,event_date,duration,body,long_description,register_url,status")
         .eq("is_featured", true)
         .eq("is_published", true)
         .maybeSingle();
-      if (data) setFeatured(data as FeaturedPoster);
+      if (data) {
+        setFeatured(data as FeaturedPoster);
+        setWorkshopId((data as { id?: string }).id ?? null);
+      }
     })();
   }, []);
+
 
   const posterSrc = featured?.image_url || miniMilitia;
   const rawTitle = featured?.title ?? "MINI militia.";
