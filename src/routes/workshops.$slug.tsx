@@ -85,6 +85,7 @@ function WorkshopPage() {
   const [w, setW] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [registerOpen, setRegisterOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
