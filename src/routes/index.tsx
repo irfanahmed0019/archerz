@@ -837,7 +837,7 @@ function Workshops() {
         </div>
 
         <div className="mt-12 border-t border-hairline">
-          {list.map((w) => (
+          {list.slice(0, 3).map((w) => (
             <Link
               key={w.id}
               to="/workshops/$slug"
@@ -876,10 +876,62 @@ function Workshops() {
             </Link>
           ))}
         </div>
+
+        <div className="mt-10 flex justify-center">
+          <a href="#events" className="btn-ghost" data-cursor-hover>
+            → VIEW ALL EVENTS
+          </a>
+        </div>
       </div>
     </section>
   );
 }
+
+function WhyJoin() {
+  return (
+    <section id="why" className="relative border-t border-hairline bg-surface">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+        <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+              02 // WHY JOIN
+            </div>
+            <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-7xl">
+              What's in it
+              <br />
+              <span className="italic font-serif font-normal text-muted-foreground">for you.</span>
+            </h2>
+          </div>
+          <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            Six reasons students join ARCHERZ — and stay through every cycle.
+          </div>
+        </div>
+
+        <div className="mt-14 grid gap-0 border border-hairline bg-background md:grid-cols-2 lg:grid-cols-3">
+          {BENEFITS.map((b, i) => (
+            <div
+              key={b.tag}
+              className={`group relative p-8 md:p-10 border-t border-l border-hairline [&:nth-child(-n+1)]:border-t-0 md:[&:nth-child(-n+2)]:border-t-0 lg:[&:nth-child(-n+3)]:border-t-0 [&:nth-child(odd)]:border-l-0 md:[&:nth-child(2n+1)]:border-l-0 md:[&:nth-child(odd)]:border-l lg:[&:nth-child(3n+1)]:border-l-0 lg:[&:nth-child(n)]:border-l`}
+            >
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
+                <span className="text-signal">{b.tag}</span>
+                <span className="text-muted-foreground">BENEFIT</span>
+              </div>
+              <h3 className="mt-10 font-display text-2xl leading-tight text-foreground md:text-3xl">
+                {b.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+              <div className="mt-6 h-[2px] w-8 bg-signal transition-all duration-300 group-hover:w-16" />
+              {/* preserve index for potential debug */}
+              <span className="sr-only">{i}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 type FeaturedPoster = {
   title: string | null;
