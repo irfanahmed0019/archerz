@@ -923,9 +923,9 @@ function Workshops() {
         </div>
 
         <div className="mt-10 flex justify-center">
-          <a href="#events" className="btn-ghost" data-cursor-hover>
+          <Link to="/workshops" className="btn-ghost" data-cursor-hover>
             → VIEW ALL EVENTS
-          </a>
+          </Link>
         </div>
       </div>
     </section>
