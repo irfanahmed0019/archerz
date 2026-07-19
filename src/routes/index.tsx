@@ -1017,7 +1017,7 @@ function PriorityEvent() {
     featured?.long_description ||
     featured?.body ||
     "Squad up. 4v4 mobile combat, live scoreboard, one lab, one afternoon. Bring your own device. Winner takes the pot. Losers get pizza.";
-  const statusLabel_source = featured?.register_url; void statusLabel_source;
+  
   const statusLabel = (featured?.status || "OPEN").toUpperCase();
 
   return (
