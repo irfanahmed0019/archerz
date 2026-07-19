@@ -572,7 +572,7 @@ function MobileBottomNav() {
 function Hero() {
   const parallax = useParallax<HTMLImageElement>(0.15);
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden bg-background">
+    <section id="top" className="relative min-h-screen overflow-hidden bg-background flex flex-col">
       {/* Backdrop */}
       <img
         ref={parallax}
@@ -602,8 +602,8 @@ function Hero() {
         <div className="shrink-0 text-foreground">'26</div>
       </div>
 
-      {/* NUDOT-style split wordmark centerpiece */}
-      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-14 md:px-10 md:pt-24">
+      {/* Split wordmark centerpiece */}
+      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-10 md:px-10 md:pt-16 flex-1 flex flex-col justify-center">
         <div className="relative flex items-center justify-center">
           <span
             className="font-display text-stroke leading-[0.85] tracking-[-0.04em] text-[16vw] md:text-[18vw] select-none animate-hero-in"
@@ -620,7 +620,6 @@ function Hero() {
             </span>
           </div>
 
-
           <span
             className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[16vw] md:text-[18vw] select-none animate-hero-in"
             style={{ animationDelay: "160ms" }}
@@ -629,57 +628,38 @@ function Hero() {
           </span>
         </div>
 
-
-        {/* Side rails */}
-        <div className="mt-6 grid grid-cols-2 gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:grid-cols-4">
-          <div className="space-y-1">
-            <div className="text-signal">STRATEGY</div>
-            <div className="text-foreground">Learn · Build</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-signal">IDENTITY</div>
-            <div className="text-foreground">CS &amp; Tech</div>
-          </div>
-          <div className="space-y-1 md:text-right">
-            <div className="text-signal">CONTENT</div>
-            <div className="text-foreground">Workshops · Events</div>
-          </div>
-          <div className="space-y-1 md:text-right">
-            <div className="text-signal">PRACTICE</div>
-            <div className="text-foreground">Ship real projects</div>
-          </div>
-        </div>
-
-        {/* Sub-headline */}
-        <div className="mt-14 flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
-          <h1 className="max-w-3xl font-display text-[13vw] leading-[0.88] tracking-tight text-foreground md:text-[6.5rem]">
-            <span data-reveal="mask"><span>ENGINEER</span></span>
-            <br />
-            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future</span></span>
+        {/* One-line value + CTAs */}
+        <div className="mt-12 md:mt-16 grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-end">
+          <h1 className="font-display text-4xl leading-[0.95] tracking-tight text-foreground md:text-6xl">
+            <span data-reveal="mask"><span>Engineer</span></span>{" "}
+            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future.</span></span>
           </h1>
-          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
-            The student association for Computer Science and Technology at Government
-            Polytechnic College, Attingal. Workshops, competitions, and side projects
-            run by students, for students.
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground md:text-base md:justify-self-end md:text-right">
+            A student-led Computer Science &amp; Technology association at GPTC Attingal —
+            workshops, projects, and events that go beyond the classroom.
           </p>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href="#events" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="EVENTS">
-            → SEE EVENTS
-          </a>
-          <Link to="/auth" className="btn-ghost" data-cursor-hover data-cursor-text="LOGIN">
-            LOGIN
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Link to="/auth" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
+            → JOIN ARCHERZ
           </Link>
+          <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
+            EXPLORE EVENTS
+          </a>
+          <span className="hidden md:inline font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground pl-2">
+            EST. 2026 · GPTC ATTINGAL
+          </span>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-        ↓ SCROLL
+      <div className="pointer-events-none relative z-10 pb-6 text-center font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+        ↓ SCROLL TO EXPLORE
       </div>
     </section>
   );
 }
+
 
 
 function TickerBand() {
