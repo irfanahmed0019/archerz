@@ -39,18 +39,8 @@ const PENDING_MSG =
 async function gateAfterAuth(): Promise<{ allowed: boolean; message?: string }> {
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) return { allowed: false };
-  const { data: rs } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
-  const roles = (rs ?? []).map((r) => r.role as string);
-  const isStaff = roles.some((r) => r === "admin" || r === "it_admin" || r === "coordinator");
-  if (isStaff) return { allowed: true };
-  // Not staff — file an access request (best-effort, ignore duplicates) and sign out.
-  await supabase.from("change_requests").insert({
-    requested_by: u.user.id,
-    kind: "access_request",
-    payload: { email: u.user.email, full_name: u.user.user_metadata?.full_name ?? null },
-  });
-  await supabase.auth.signOut();
-  return { allowed: false, message: PENDING_MSG };
+  // Open access: any authenticated user is allowed in.
+  return { allowed: true };
 }
 
 function AuthPage() {
