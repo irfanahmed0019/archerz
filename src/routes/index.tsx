@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import archLogo from "@/assets/arch-logo.png";
 import heroBackdrop from "@/assets/hero-backdrop.jpg";
 import bannerWorkshops from "@/assets/banner-workshops.jpg";
