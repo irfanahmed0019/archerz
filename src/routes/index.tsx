@@ -1110,9 +1110,14 @@ function PriorityEvent() {
                   </div>
                 ))}
               </div>
-              <a href={registerHref} target={registerHref.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="btn-brutal btn-brutal-hover mt-6 w-full justify-center" data-cursor-hover>
+              <button
+                type="button"
+                onClick={() => setRegisterOpen(true)}
+                className="btn-brutal btn-brutal-hover mt-6 w-full justify-center"
+                data-cursor-hover
+              >
                 → REGISTER
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -1126,9 +1131,18 @@ function PriorityEvent() {
           items={["REGISTER NOW", (featured?.title || "MINI MILITIA '26").toUpperCase(), dateLabel, "ENTER THE ARENA"]}
         />
       </div>
+
+      <RegisterDialog
+        open={registerOpen}
+        onClose={() => setRegisterOpen(false)}
+        eventTitle={featured?.title || "MINI MILITIA '26"}
+        workshopId={workshopId}
+        externalUrl={featured?.register_url || null}
+      />
     </section>
   );
 }
+
 
 
 function Team() {
