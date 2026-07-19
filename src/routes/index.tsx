@@ -47,10 +47,11 @@ function Index() {
         <Hero />
         <TickerBand />
         <Manifesto />
-        <Workshops />
+        <WhyJoin />
         <PriorityEvent />
-        <Team />
+        <Workshops />
         <Roadmap />
+        <Team />
         <ClosingCTA />
         <Contact />
       </main>
@@ -59,6 +60,7 @@ function Index() {
     </div>
   );
 }
+
 
 function PageTransition() {
   const [pct, setPct] = useState(0);
@@ -251,11 +253,22 @@ function useReveal<T extends HTMLElement>() {
 }
 
 const NAV_LINKS = [
-  { href: "#workshops", label: "Workshops" },
+  { href: "#about", label: "About" },
   { href: "#events", label: "Events" },
+  { href: "#workshops", label: "Workshops" },
   { href: "#team", label: "Team" },
-  { href: "#community", label: "Community" },
+  { href: "#contact", label: "Contact" },
 ];
+
+const BENEFITS = [
+  { tag: "01", title: "Practical Workshops", body: "Hands-on sessions on tools and stacks you'll actually use." },
+  { tag: "02", title: "Real Projects", body: "Ship things with a team — not just assignments." },
+  { tag: "03", title: "Leadership", body: "Run events, lead tracks, own a domain end-to-end." },
+  { tag: "04", title: "Networking", body: "Peers, seniors, alumni, and industry — one room." },
+  { tag: "05", title: "Technical Growth", body: "Level up beyond the syllabus at your own pace." },
+  { tag: "06", title: "Community", body: "A crew that debugs with you at 2AM. Literally." },
+];
+
 
 const PILLARS = [
   {
@@ -559,7 +572,7 @@ function MobileBottomNav() {
 function Hero() {
   const parallax = useParallax<HTMLImageElement>(0.15);
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden bg-background">
+    <section id="top" className="relative min-h-screen overflow-hidden bg-background flex flex-col">
       {/* Backdrop */}
       <img
         ref={parallax}
@@ -589,8 +602,8 @@ function Hero() {
         <div className="shrink-0 text-foreground">'26</div>
       </div>
 
-      {/* NUDOT-style split wordmark centerpiece */}
-      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-14 md:px-10 md:pt-24">
+      {/* Split wordmark centerpiece */}
+      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 pt-10 md:px-10 md:pt-16 flex-1 flex flex-col justify-center">
         <div className="relative flex items-center justify-center">
           <span
             className="font-display text-stroke leading-[0.85] tracking-[-0.04em] text-[16vw] md:text-[18vw] select-none animate-hero-in"
@@ -607,7 +620,6 @@ function Hero() {
             </span>
           </div>
 
-
           <span
             className="font-display leading-[0.85] tracking-[-0.04em] text-foreground text-[16vw] md:text-[18vw] select-none animate-hero-in"
             style={{ animationDelay: "160ms" }}
@@ -616,57 +628,38 @@ function Hero() {
           </span>
         </div>
 
-
-        {/* Side rails */}
-        <div className="mt-6 grid grid-cols-2 gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:grid-cols-4">
-          <div className="space-y-1">
-            <div className="text-signal">STRATEGY</div>
-            <div className="text-foreground">Learn · Build</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-signal">IDENTITY</div>
-            <div className="text-foreground">CS &amp; Tech</div>
-          </div>
-          <div className="space-y-1 md:text-right">
-            <div className="text-signal">CONTENT</div>
-            <div className="text-foreground">Workshops · Events</div>
-          </div>
-          <div className="space-y-1 md:text-right">
-            <div className="text-signal">PRACTICE</div>
-            <div className="text-foreground">Ship real projects</div>
-          </div>
-        </div>
-
-        {/* Sub-headline */}
-        <div className="mt-14 flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
-          <h1 className="max-w-3xl font-display text-[13vw] leading-[0.88] tracking-tight text-foreground md:text-[6.5rem]">
-            <span data-reveal="mask"><span>ENGINEER</span></span>
-            <br />
-            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future</span></span>
+        {/* One-line value + CTAs */}
+        <div className="mt-12 md:mt-16 grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-end">
+          <h1 className="font-display text-4xl leading-[0.95] tracking-tight text-foreground md:text-6xl">
+            <span data-reveal="mask"><span>Engineer</span></span>{" "}
+            <span data-reveal="mask"><span className="italic font-serif text-signal font-normal">the future.</span></span>
           </h1>
-          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
-            The student association for Computer Science and Technology at Government
-            Polytechnic College, Attingal. Workshops, competitions, and side projects
-            run by students, for students.
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground md:text-base md:justify-self-end md:text-right">
+            A student-led Computer Science &amp; Technology association at GPTC Attingal —
+            workshops, projects, and events that go beyond the classroom.
           </p>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4 pb-24">
-          <a href="#events" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="EVENTS">
-            → SEE EVENTS
-          </a>
-          <Link to="/auth" className="btn-ghost" data-cursor-hover data-cursor-text="LOGIN">
-            LOGIN
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Link to="/auth" className="btn-brutal btn-brutal-hover" data-cursor-hover data-cursor-text="JOIN">
+            → JOIN ARCHERZ
           </Link>
+          <a href="#events" className="btn-ghost" data-cursor-hover data-cursor-text="EVENTS">
+            EXPLORE EVENTS
+          </a>
+          <span className="hidden md:inline font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground pl-2">
+            EST. 2026 · GPTC ATTINGAL
+          </span>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-        ↓ SCROLL
+      <div className="pointer-events-none relative z-10 pb-6 text-center font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+        ↓ SCROLL TO EXPLORE
       </div>
     </section>
   );
 }
+
 
 
 function TickerBand() {
@@ -805,7 +798,7 @@ function Workshops() {
         />
         <div className="relative mx-auto flex max-w-[1400px] flex-col items-center justify-center px-5 py-28 text-center md:px-10 md:py-40">
           <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-            [ 02 // TRAINING INTERFACE ACTIVE ]
+            [ 04 // TRAINING INTERFACE ACTIVE ]
           </div>
           <h2 className="mt-6 font-display text-6xl leading-[0.9] tracking-tight text-foreground md:text-[9rem]">
             UPGRADE
@@ -844,7 +837,7 @@ function Workshops() {
         </div>
 
         <div className="mt-12 border-t border-hairline">
-          {list.map((w) => (
+          {list.slice(0, 3).map((w) => (
             <Link
               key={w.id}
               to="/workshops/$slug"
@@ -883,10 +876,62 @@ function Workshops() {
             </Link>
           ))}
         </div>
+
+        <div className="mt-10 flex justify-center">
+          <a href="#events" className="btn-ghost" data-cursor-hover>
+            → VIEW ALL EVENTS
+          </a>
+        </div>
       </div>
     </section>
   );
 }
+
+function WhyJoin() {
+  return (
+    <section id="why" className="relative border-t border-hairline bg-surface">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+        <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+              02 // WHY JOIN
+            </div>
+            <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-7xl">
+              What's in it
+              <br />
+              <span className="italic font-serif font-normal text-muted-foreground">for you.</span>
+            </h2>
+          </div>
+          <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            Six reasons students join ARCHERZ — and stay through every cycle.
+          </div>
+        </div>
+
+        <div className="mt-14 grid gap-0 border border-hairline bg-background md:grid-cols-2 lg:grid-cols-3">
+          {BENEFITS.map((b, i) => (
+            <div
+              key={b.tag}
+              className={`group relative p-8 md:p-10 border-t border-l border-hairline [&:nth-child(-n+1)]:border-t-0 md:[&:nth-child(-n+2)]:border-t-0 lg:[&:nth-child(-n+3)]:border-t-0 [&:nth-child(odd)]:border-l-0 md:[&:nth-child(2n+1)]:border-l-0 md:[&:nth-child(odd)]:border-l lg:[&:nth-child(3n+1)]:border-l-0 lg:[&:nth-child(n)]:border-l`}
+            >
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
+                <span className="text-signal">{b.tag}</span>
+                <span className="text-muted-foreground">BENEFIT</span>
+              </div>
+              <h3 className="mt-10 font-display text-2xl leading-tight text-foreground md:text-3xl">
+                {b.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+              <div className="mt-6 h-[2px] w-8 bg-signal transition-all duration-300 group-hover:w-16" />
+              {/* preserve index for potential debug */}
+              <span className="sr-only">{i}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 type FeaturedPoster = {
   title: string | null;
@@ -1049,7 +1094,7 @@ function Team() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              04 // OPERATORS
+              06 // OPERATORS
             </div>
             <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-7xl">
               Meet the
@@ -1146,7 +1191,7 @@ function ClosingCTA() {
 
       <div className="relative mx-auto max-w-5xl px-5 py-28 text-center md:px-10 md:py-40">
         <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-          06 // ENLIST
+          07 // ENLIST
         </div>
         <h2 className="mt-8 font-display text-6xl leading-[0.85] tracking-tight text-foreground md:text-9xl">
           Ready to
@@ -1160,13 +1205,14 @@ function ClosingCTA() {
           together. Bring the curiosity — we'll bring the tooling.
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="btn-brutal btn-brutal-hover" data-cursor-hover>
+          <Link to="/auth" className="btn-brutal btn-brutal-hover" data-cursor-hover>
             → JOIN ARCHERZ
-          </a>
-          <a href="#about" className="btn-ghost" data-cursor-hover>
-            LEARN MORE ABOUT ARCHERZ
+          </Link>
+          <a href="#contact" className="btn-ghost" data-cursor-hover>
+            CONTACT US
           </a>
         </div>
+
       </div>
     </section>
   );
@@ -1183,7 +1229,7 @@ function Contact() {
       <div className="mx-auto grid max-w-[1400px] gap-0 md:grid-cols-[1fr_1.2fr]">
         <div className="border-b border-hairline bg-surface p-8 md:border-b-0 md:border-r md:p-16">
           <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-            07 // TRANSMIT
+            08 // TRANSMIT
           </div>
           <h2 className="mt-6 font-display text-5xl leading-[0.9] tracking-tight text-foreground md:text-6xl">
             Get in
