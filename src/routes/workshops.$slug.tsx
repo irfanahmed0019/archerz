@@ -269,15 +269,14 @@ function WorkshopPage() {
           >
             ⤴ SHARE
           </button>
-          {w.register_url ? (
-            <a
-              href={w.register_url}
-              target="_blank"
-              rel="noreferrer"
+          {w.status !== "CLOSED" ? (
+            <button
+              type="button"
+              onClick={() => setRegisterOpen(true)}
               className="tap-target flex flex-1 items-center justify-center bg-signal px-4 font-mono text-[11px] uppercase tracking-[0.22em] text-background"
             >
               → REGISTER
-            </a>
+            </button>
           ) : (
             <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               CLOSED
@@ -285,6 +284,14 @@ function WorkshopPage() {
           )}
         </div>
       </nav>
+
+      <RegisterDialog
+        open={registerOpen}
+        onClose={() => setRegisterOpen(false)}
+        eventTitle={w.title}
+        workshopId={w.id}
+        externalUrl={w.register_url}
+      />
     </div>
   );
 }
