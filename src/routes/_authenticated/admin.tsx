@@ -45,7 +45,7 @@ function AdminPage() {
   const [requests, setRequests] = useState<
     Array<{ id: string; kind: string; payload: Record<string, unknown>; status: string; created_at: string }>
   >([]);
-  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "team" | "members" | "users" | "settings">("dashboard");
+  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "registrations" | "team" | "members" | "users" | "settings">("dashboard");
   const [editing, setEditing] = useState<Workshop | null>(null);
   const [creating, setCreating] = useState(false);
 
@@ -203,7 +203,7 @@ function AdminPage() {
         )}
 
         <div className="mb-8 flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
-          {(["dashboard", ...(isStaff ? (["cards", "requests", "team"] as const) : []), ...(isAdmin ? (["members", "users", "settings"] as const) : [])] as const).map((t) => (
+          {(["dashboard", ...(isStaff ? (["cards", "requests", "registrations", "team"] as const) : []), ...(isAdmin ? (["members", "users", "settings"] as const) : [])] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -340,6 +340,9 @@ function AdminPage() {
         {tab === "team" && isStaff && (
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
+
+        {tab === "registrations" && isStaff && <RegistrationsPanel canManage={isAdmin} />}
+
 
         {tab === "members" && isAdmin && <TeamMembersPanel />}
 
@@ -1159,3 +1162,165 @@ function VercelDeployHelper() {
     </div>
   );
 }
+
+type Registration = {
+  id: string;
+  workshop_id: string | null;
+  event_title: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  branch: string | null;
+  notes: string | null;
+  status: string;
+  created_at: string;
+};
+
+function RegistrationsPanel({ canManage }: { canManage: boolean }) {
+  const [rows, setRows] = useState<Registration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "rejected">("all");
+
+  const load = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from("event_registrations")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setRows((data ?? []) as Registration[]);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const filtered = filter === "all" ? rows : rows.filter((r) => r.status === filter);
+
+  const setStatus = async (id: string, status: string) => {
+    await supabase.from("event_registrations").update({ status }).eq("id", id);
+    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status } : r)));
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this registration?")) return;
+    await supabase.from("event_registrations").delete().eq("id", id);
+    setRows((rs) => rs.filter((r) => r.id !== id));
+  };
+
+  const exportCsv = () => {
+    const header = ["created_at", "event_title", "full_name", "email", "phone", "branch", "status", "notes"];
+    const escape = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const csv = [header.join(","), ...filtered.map((r) => header.map((h) => escape((r as unknown as Record<string, unknown>)[h])).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `archerz-registrations-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="grid gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
+            [ REGISTRATIONS ]
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Everyone who submitted the event register form. {rows.length} total.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.24em]">
+          {(["all", "pending", "confirmed", "rejected"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`border px-3 py-1.5 ${filter === f ? "border-signal text-signal" : "border-hairline text-muted-foreground"}`}
+            >
+              {f}
+            </button>
+          ))}
+          <button onClick={load} className="border border-hairline px-3 py-1.5">↻ REFRESH</button>
+          <button onClick={exportCsv} className="border border-foreground bg-foreground px-3 py-1.5 text-background">↓ CSV</button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="border border-hairline bg-surface p-6 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          Loading…
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="border border-hairline bg-surface p-6 text-sm text-muted-foreground">
+          No registrations yet.
+        </div>
+      ) : (
+        <div className="border border-hairline">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[900px] border-collapse">
+              <thead className="bg-surface font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                <tr>
+                  <th className="border-b border-hairline px-3 py-2 text-left">When</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Event</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Name</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Contact</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Branch</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Status</th>
+                  <th className="border-b border-hairline px-3 py-2 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((r) => (
+                  <tr key={r.id} className="align-top">
+                    <td className="border-b border-hairline px-3 py-3 text-[11px] text-muted-foreground">
+                      {new Date(r.created_at).toLocaleString()}
+                    </td>
+                    <td className="border-b border-hairline px-3 py-3 text-sm">{r.event_title}</td>
+                    <td className="border-b border-hairline px-3 py-3 text-sm font-medium">
+                      {r.full_name}
+                      {r.notes && (
+                        <div className="mt-1 text-[11px] text-muted-foreground">"{r.notes}"</div>
+                      )}
+                    </td>
+                    <td className="border-b border-hairline px-3 py-3 text-[12px]">
+                      <div>{r.email}</div>
+                      {r.phone && <div className="text-muted-foreground">{r.phone}</div>}
+                    </td>
+                    <td className="border-b border-hairline px-3 py-3 text-[12px] text-muted-foreground">{r.branch ?? "—"}</td>
+                    <td className="border-b border-hairline px-3 py-3">
+                      <span
+                        className={`font-mono text-[10px] uppercase tracking-[0.24em] px-2 py-1 border ${
+                          r.status === "confirmed"
+                            ? "border-signal text-signal"
+                            : r.status === "rejected"
+                              ? "border-destructive text-destructive"
+                              : "border-hairline text-muted-foreground"
+                        }`}
+                      >
+                        {r.status}
+                      </span>
+                    </td>
+                    <td className="border-b border-hairline px-3 py-3">
+                      {canManage ? (
+                        <div className="flex flex-wrap gap-1 font-mono text-[10px] uppercase tracking-[0.22em]">
+                          <button onClick={() => setStatus(r.id, "confirmed")} className="border border-signal px-2 py-1 text-signal">Confirm</button>
+                          <button onClick={() => setStatus(r.id, "rejected")} className="border border-hairline px-2 py-1 text-muted-foreground">Reject</button>
+                          <button onClick={() => remove(r.id)} className="border border-destructive px-2 py-1 text-destructive">Del</button>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-muted-foreground">view only</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
