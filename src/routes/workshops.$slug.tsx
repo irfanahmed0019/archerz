@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { RegisterDialog } from "@/components/RegisterDialog";
 
 type Workshop = {
   id: string;
@@ -84,6 +85,7 @@ function WorkshopPage() {
   const [w, setW] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [registerOpen, setRegisterOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -211,16 +213,15 @@ function WorkshopPage() {
 
             {/* Register + share */}
             <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-              {w.register_url ? (
-                <a
-                  href={w.register_url}
-                  target="_blank"
-                  rel="noreferrer"
+              {w.status !== "CLOSED" ? (
+                <button
+                  type="button"
+                  onClick={() => setRegisterOpen(true)}
                   className="group flex items-center justify-center gap-3 rounded-2xl bg-signal px-8 py-5 font-mono text-sm uppercase tracking-[0.28em] text-background transition hover:opacity-90"
                 >
                   REGISTER NOW
                   <span className="transition group-hover:translate-x-1">↗</span>
-                </a>
+                </button>
               ) : (
                 <div className="rounded-2xl border border-hairline px-8 py-5 text-center font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
                   REGISTRATION CLOSED
@@ -268,15 +269,14 @@ function WorkshopPage() {
           >
             ⤴ SHARE
           </button>
-          {w.register_url ? (
-            <a
-              href={w.register_url}
-              target="_blank"
-              rel="noreferrer"
+          {w.status !== "CLOSED" ? (
+            <button
+              type="button"
+              onClick={() => setRegisterOpen(true)}
               className="tap-target flex flex-1 items-center justify-center bg-signal px-4 font-mono text-[11px] uppercase tracking-[0.22em] text-background"
             >
               → REGISTER
-            </a>
+            </button>
           ) : (
             <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               CLOSED
@@ -284,6 +284,14 @@ function WorkshopPage() {
           )}
         </div>
       </nav>
+
+      <RegisterDialog
+        open={registerOpen}
+        onClose={() => setRegisterOpen(false)}
+        eventTitle={w.title}
+        workshopId={w.id}
+        externalUrl={w.register_url}
+      />
     </div>
   );
 }
