@@ -413,9 +413,39 @@ function Marquee({
   );
 }
 
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState<string>(ids[0] ?? "");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+    if (!els.length) return;
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+        }
+        let best = ids[0];
+        let bestRatio = 0;
+        for (const [id, ratio] of visible) {
+          if (ratio > bestRatio) { best = id; bestRatio = ratio; }
+        }
+        if (bestRatio > 0) setActive(best);
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [ids.join("|")]);
+  return active;
+}
+
 function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const active = useActiveSection(NAV_LINKS.map((l) => l.href.replace("#", "")));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -444,16 +474,23 @@ function Nav() {
         </a>
 
         <nav className="hidden items-center gap-10 md:flex">
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="link-quiet font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground hover:text-foreground"
-            >
-              {l.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((l) => {
+            const isActive = active === l.href.replace("#", "");
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={isActive ? "true" : undefined}
+                className={`link-quiet font-mono text-[11px] uppercase tracking-[0.24em] transition-colors ${
+                  isActive ? "text-signal" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {l.label}
+              </a>
+            );
+          })}
         </nav>
+
 
         <div className="flex items-center gap-3">
           <Link to="/auth" className="hidden btn-brutal btn-brutal-hover md:inline-flex" data-cursor-hover>
