@@ -436,6 +436,16 @@ function WorkshopEditor({
                   rows={key === "long_description" ? 4 : 2}
                   className="mt-2 block w-full border border-hairline bg-background px-3 py-2 text-sm"
                 />
+              ) : key === "status" ? (
+                <select
+                  value={String((f as unknown as Record<string, unknown>).status ?? "OPEN")}
+                  onChange={(e) => setF({ ...f, status: e.target.value })}
+                  className="mt-2 block w-full border border-hairline bg-background px-3 py-2 text-sm"
+                >
+                  <option value="OPEN">OPEN — registrations live</option>
+                  <option value="QUEUED">QUEUED — coming soon (no register)</option>
+                  <option value="CLOSED">CLOSED — event finished</option>
+                </select>
               ) : (
                 <input
                   value={String((f as unknown as Record<string, unknown>)[key] ?? "")}
