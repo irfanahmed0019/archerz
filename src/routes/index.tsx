@@ -1205,13 +1205,14 @@ function ClosingCTA() {
           together. Bring the curiosity — we'll bring the tooling.
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="btn-brutal btn-brutal-hover" data-cursor-hover>
+          <Link to="/auth" className="btn-brutal btn-brutal-hover" data-cursor-hover>
             → JOIN ARCHERZ
-          </a>
-          <a href="#about" className="btn-ghost" data-cursor-hover>
-            LEARN MORE ABOUT ARCHERZ
+          </Link>
+          <a href="#contact" className="btn-ghost" data-cursor-hover>
+            CONTACT US
           </a>
         </div>
+
       </div>
     </section>
   );
