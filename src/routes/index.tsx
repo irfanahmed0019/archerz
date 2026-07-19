@@ -1289,7 +1289,7 @@ function ClosingCTA() {
 
 function Contact() {
   const [sent, setSent] = useState(false);
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSent(true);
   };
