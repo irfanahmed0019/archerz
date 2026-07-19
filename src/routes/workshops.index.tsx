@@ -203,7 +203,7 @@ function ListBlock({
           {items.map((w) => {
             const meta = statusMeta(w.status);
             const clickable = meta.tone !== "closed";
-            const Wrap: (p: { children: React.ReactNode }) => JSX.Element = clickable
+            const Wrap: (p: { children: React.ReactNode }) => React.ReactElement = clickable
               ? ({ children }) => (
                   <Link
                     to="/workshops/$slug"
