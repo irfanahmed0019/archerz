@@ -938,16 +938,16 @@ function WhyJoin() {
         <div className="flex flex-col gap-6 border-b border-hairline pb-10 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-signal">
-              02 // WHY JOIN
+              02 // WHAT'S IN IT FOR YOU
             </div>
             <h2 className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-7xl">
-              What's in it
+              Six reasons
               <br />
-              <span className="italic font-serif font-normal text-muted-foreground">for you.</span>
+              <span className="italic font-serif font-normal text-muted-foreground">to show up.</span>
             </h2>
           </div>
           <div className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Six reasons students join ARCHERZ — and stay through every cycle.
+            What you actually get out of ARCHERZ — the stuff worth an hour of your evening.
           </div>
         </div>
 
