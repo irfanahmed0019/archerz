@@ -341,6 +341,9 @@ function AdminPage() {
           <TeamPanel isAdmin={isAdmin} onChanged={refresh} />
         )}
 
+        {tab === "registrations" && isStaff && <RegistrationsPanel canManage={isAdmin} />}
+
+
         {tab === "members" && isAdmin && <TeamMembersPanel />}
 
         {tab === "users" && isAdmin && <MembersPanel />}
