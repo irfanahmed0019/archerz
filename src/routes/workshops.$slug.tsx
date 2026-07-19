@@ -282,19 +282,32 @@ function WorkshopPage() {
           >
             ⤴ SHARE
           </button>
-          {w.status !== "CLOSED" ? (
-            <button
-              type="button"
-              onClick={() => setRegisterOpen(true)}
-              className="tap-target flex flex-1 items-center justify-center bg-signal px-4 font-mono text-[11px] uppercase tracking-[0.22em] text-background"
-            >
-              → REGISTER
-            </button>
-          ) : (
-            <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              CLOSED
-            </span>
-          )}
+          {(() => {
+            const s = (w.status || "").toUpperCase();
+            if (s === "CLOSED" || s === "FINISHED" || s === "PAST") {
+              return (
+                <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  FINISHED
+                </span>
+              );
+            }
+            if (s === "QUEUED" || s === "SOON" || s === "COMING_SOON") {
+              return (
+                <span className="tap-target flex flex-1 items-center justify-center border border-hairline px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground">
+                  COMING SOON
+                </span>
+              );
+            }
+            return (
+              <button
+                type="button"
+                onClick={() => setRegisterOpen(true)}
+                className="tap-target flex flex-1 items-center justify-center bg-signal px-4 font-mono text-[11px] uppercase tracking-[0.22em] text-background"
+              >
+                → REGISTER
+              </button>
+            );
+          })()}
         </div>
       </nav>
 
