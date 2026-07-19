@@ -211,7 +211,7 @@ function AdminPage() {
                 tab === t ? "border-signal text-signal" : "border-hairline text-muted-foreground"
               }`}
             >
-              {t}
+              {t === "users" ? "all members" : t === "members" ? "team" : t}
               {t === "requests" && requests.length > 0 && (
                 <span className="ml-2 rounded-full bg-signal px-2 py-0.5 text-[10px] text-background">
                   {requests.length}
