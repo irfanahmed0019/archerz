@@ -213,16 +213,15 @@ function WorkshopPage() {
 
             {/* Register + share */}
             <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-              {w.register_url ? (
-                <a
-                  href={w.register_url}
-                  target="_blank"
-                  rel="noreferrer"
+              {w.status !== "CLOSED" ? (
+                <button
+                  type="button"
+                  onClick={() => setRegisterOpen(true)}
                   className="group flex items-center justify-center gap-3 rounded-2xl bg-signal px-8 py-5 font-mono text-sm uppercase tracking-[0.28em] text-background transition hover:opacity-90"
                 >
                   REGISTER NOW
                   <span className="transition group-hover:translate-x-1">↗</span>
-                </a>
+                </button>
               ) : (
                 <div className="rounded-2xl border border-hairline px-8 py-5 text-center font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
                   REGISTRATION CLOSED
