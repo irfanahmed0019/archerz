@@ -211,7 +211,7 @@ function AdminPage() {
                 tab === t ? "border-signal text-signal" : "border-hairline text-muted-foreground"
               }`}
             >
-              {t}
+              {t === "users" ? "all members" : t === "members" ? "team members" : t === "team" ? "roles" : t}
               {t === "requests" && requests.length > 0 && (
                 <span className="ml-2 rounded-full bg-signal px-2 py-0.5 text-[10px] text-background">
                   {requests.length}
@@ -704,9 +704,14 @@ function TeamPanel({ isAdmin, onChanged }: { isAdmin: boolean; onChanged: () => 
 }
 
 function MembersPanel() {
-  const [members, setMembers] = useState<
-    Array<{ id: string; email: string | null; display_name: string | null; created_at?: string | null }>
-  >([]);
+  type Member = {
+    id: string;
+    email: string | null;
+    display_name: string | null;
+    created_at?: string | null;
+    roles: Role[];
+  };
+  const [members, setMembers] = useState<Member[]>([]);
   const [q, setQ] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [nEmail, setNEmail] = useState("");
@@ -718,11 +723,23 @@ function MembersPanel() {
   const createUser = useServerFn(adminCreateUser);
 
   async function loadMembers() {
-    const { data } = await supabase
+    const { data: ps } = await supabase
       .from("profiles")
       .select("id, email, display_name, created_at")
       .order("created_at", { ascending: false });
-    setMembers((data ?? []) as typeof members);
+    const { data: rs } = await supabase.from("user_roles").select("user_id, role");
+    const roleMap = new Map<string, Role[]>();
+    (rs ?? []).forEach((r) => {
+      const list = roleMap.get(r.user_id) ?? [];
+      list.push(r.role as Role);
+      roleMap.set(r.user_id, list);
+    });
+    setMembers(
+      ((ps ?? []) as Array<Omit<Member, "roles">>).map((p) => ({
+        ...p,
+        roles: roleMap.get(p.id) ?? [],
+      })),
+    );
   }
 
   useEffect(() => {
@@ -745,6 +762,17 @@ function MembersPanel() {
     }
   }
 
+  async function toggleRole(user_id: string, role: Role, has: boolean) {
+    if (has) {
+      const { error } = await supabase.from("user_roles").delete().eq("user_id", user_id).eq("role", role);
+      if (error) return alert(error.message);
+    } else {
+      const { error } = await supabase.from("user_roles").insert({ user_id, role });
+      if (error) return alert(error.message);
+    }
+    await loadMembers();
+  }
+
   const filtered = members.filter(
     (m) =>
       !q ||
@@ -752,11 +780,13 @@ function MembersPanel() {
       (m.display_name ?? "").toLowerCase().includes(q.toLowerCase()),
   );
 
+  const ROLES: Role[] = ["admin", "it_admin", "coordinator", "normal"];
+
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-3xl tracking-tight md:text-5xl">
-          Members <span className="text-signal">/ {members.length}</span>
+          All members <span className="text-signal">/ {members.length}</span>
         </h1>
         <div className="flex items-center gap-2">
           <input
@@ -776,26 +806,10 @@ function MembersPanel() {
 
       {showCreate && (
         <form onSubmit={handleCreate} className="mb-8 grid gap-3 border border-hairline bg-surface p-5 md:grid-cols-5">
-          <input
-            required type="email" placeholder="email"
-            value={nEmail} onChange={(e) => setNEmail(e.target.value)}
-            className="border border-hairline bg-background px-3 py-2 font-mono text-xs md:col-span-2"
-          />
-          <input
-            required type="text" placeholder="display name"
-            value={nName} onChange={(e) => setNName(e.target.value)}
-            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
-          />
-          <input
-            required type="password" placeholder="password (min 8)"
-            value={nPass} onChange={(e) => setNPass(e.target.value)}
-            minLength={8}
-            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
-          />
-          <select
-            value={nRole} onChange={(e) => setNRole(e.target.value as Role)}
-            className="border border-hairline bg-background px-3 py-2 font-mono text-xs"
-          >
+          <input required type="email" placeholder="email" value={nEmail} onChange={(e) => setNEmail(e.target.value)} className="border border-hairline bg-background px-3 py-2 font-mono text-xs md:col-span-2" />
+          <input required type="text" placeholder="display name" value={nName} onChange={(e) => setNName(e.target.value)} className="border border-hairline bg-background px-3 py-2 font-mono text-xs" />
+          <input required type="password" placeholder="password (min 8)" value={nPass} onChange={(e) => setNPass(e.target.value)} minLength={8} className="border border-hairline bg-background px-3 py-2 font-mono text-xs" />
+          <select value={nRole} onChange={(e) => setNRole(e.target.value as Role)} className="border border-hairline bg-background px-3 py-2 font-mono text-xs">
             <option value="normal">normal</option>
             <option value="coordinator">coordinator</option>
             <option value="it_admin">it_admin</option>
@@ -803,10 +817,7 @@ function MembersPanel() {
           </select>
           <div className="md:col-span-5 flex items-center justify-between gap-4">
             {msg && <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">{msg}</span>}
-            <button
-              type="submit" disabled={busy}
-              className="ml-auto border border-signal bg-signal px-4 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-background disabled:opacity-50"
-            >
+            <button type="submit" disabled={busy} className="ml-auto border border-signal bg-signal px-4 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-background disabled:opacity-50">
               {busy ? "Creating…" : "Create user"}
             </button>
           </div>
@@ -814,19 +825,40 @@ function MembersPanel() {
       )}
 
       <div className="border-t border-hairline">
-        <div className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+        <div className="hidden md:grid grid-cols-[1.2fr_1.4fr_2fr_auto] gap-4 border-b border-hairline py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <div>NAME</div>
           <div>EMAIL</div>
+          <div>ROLES · click to toggle</div>
           <div>JOINED</div>
         </div>
         {filtered.map((m) => (
           <div
             key={m.id}
-            className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-hairline py-3 font-mono text-xs"
+            className="grid grid-cols-1 md:grid-cols-[1.2fr_1.4fr_2fr_auto] gap-3 md:gap-4 border-b border-hairline py-4 font-mono text-xs"
           >
             <div className="text-foreground">{m.display_name ?? "—"}</div>
-            <div className="text-muted-foreground">{m.email ?? "—"}</div>
-            <div className="text-signal">
+            <div className="text-muted-foreground break-all">{m.email ?? "—"}</div>
+            <div className="flex flex-wrap gap-2">
+              {ROLES.map((r) => {
+                const has = m.roles.includes(r);
+                return (
+                  <button
+                    key={r}
+                    onClick={() => toggleRole(m.id, r, has)}
+                    className={
+                      "border px-2 py-1 uppercase tracking-[0.2em] text-[10px] transition " +
+                      (has
+                        ? "border-signal bg-signal text-background"
+                        : "border-hairline text-muted-foreground hover:text-foreground")
+                    }
+                    title={has ? `Revoke ${r}` : `Grant ${r}`}
+                  >
+                    {r}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="text-signal md:text-right">
               {m.created_at ? new Date(m.created_at).toLocaleDateString() : "—"}
             </div>
           </div>
@@ -840,6 +872,7 @@ function MembersPanel() {
     </div>
   );
 }
+
 
 function TeamMembersPanel() {
   const [rows, setRows] = useState<
