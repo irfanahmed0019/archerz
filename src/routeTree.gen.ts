@@ -14,6 +14,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkshopsIndexRouteImport } from './routes/workshops.index'
 import { Route as WorkshopsSlugRouteImport } from './routes/workshops.$slug'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -44,6 +45,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkshopsIndexRoute = WorkshopsIndexRouteImport.update({
+  id: '/workshops/',
+  path: '/workshops/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkshopsSlugRoute = WorkshopsSlugRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/api/chat': typeof ApiChatRoute
   '/workshops/$slug': typeof WorkshopsSlugRoute
+  '/workshops/': typeof WorkshopsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/api/chat': typeof ApiChatRoute
   '/workshops/$slug': typeof WorkshopsSlugRoute
+  '/workshops': typeof WorkshopsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/api/chat': typeof ApiChatRoute
   '/workshops/$slug': typeof WorkshopsSlugRoute
+  '/workshops/': typeof WorkshopsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/chat'
     | '/workshops/$slug'
+    | '/workshops/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/chat'
     | '/workshops/$slug'
+    | '/workshops'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   id:
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/api/chat'
     | '/workshops/$slug'
+    | '/workshops/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
   WorkshopsSlugRoute: typeof WorkshopsSlugRoute
+  WorkshopsIndexRoute: typeof WorkshopsIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workshops/': {
+      id: '/workshops/'
+      path: '/workshops'
+      fullPath: '/workshops/'
+      preLoaderRoute: typeof WorkshopsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/workshops/$slug': {
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiChatRoute: ApiChatRoute,
   WorkshopsSlugRoute: WorkshopsSlugRoute,
+  WorkshopsIndexRoute: WorkshopsIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
