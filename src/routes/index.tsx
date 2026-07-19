@@ -984,6 +984,9 @@ type FeaturedPoster = {
 function PriorityEvent() {
   const tilt = useTilt<HTMLDivElement>(10);
   const [featured, setFeatured] = useState<FeaturedPoster | null>(null);
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [workshopId, setWorkshopId] = useState<string | null>(null);
+
 
   useEffect(() => {
     (async () => {
