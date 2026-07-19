@@ -253,11 +253,22 @@ function useReveal<T extends HTMLElement>() {
 }
 
 const NAV_LINKS = [
-  { href: "#workshops", label: "Workshops" },
+  { href: "#about", label: "About" },
   { href: "#events", label: "Events" },
+  { href: "#workshops", label: "Workshops" },
   { href: "#team", label: "Team" },
-  { href: "#community", label: "Community" },
+  { href: "#contact", label: "Contact" },
 ];
+
+const BENEFITS = [
+  { tag: "01", title: "Practical Workshops", body: "Hands-on sessions on tools and stacks you'll actually use." },
+  { tag: "02", title: "Real Projects", body: "Ship things with a team — not just assignments." },
+  { tag: "03", title: "Leadership", body: "Run events, lead tracks, own a domain end-to-end." },
+  { tag: "04", title: "Networking", body: "Peers, seniors, alumni, and industry — one room." },
+  { tag: "05", title: "Technical Growth", body: "Level up beyond the syllabus at your own pace." },
+  { tag: "06", title: "Community", body: "A crew that debugs with you at 2AM. Literally." },
+];
+
 
 const PILLARS = [
   {
