@@ -45,7 +45,7 @@ function AdminPage() {
   const [requests, setRequests] = useState<
     Array<{ id: string; kind: string; payload: Record<string, unknown>; status: string; created_at: string }>
   >([]);
-  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "team" | "members" | "users" | "settings">("dashboard");
+  const [tab, setTab] = useState<"dashboard" | "cards" | "requests" | "registrations" | "team" | "members" | "users" | "settings">("dashboard");
   const [editing, setEditing] = useState<Workshop | null>(null);
   const [creating, setCreating] = useState(false);
 
